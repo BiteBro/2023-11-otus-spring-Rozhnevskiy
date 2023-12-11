@@ -1,11 +1,18 @@
 package ru.otus.hw.dao;
 
+import com.opencsv.bean.CsvToBeanBuilder;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import ru.otus.hw.config.TestFileNameProvider;
+import ru.otus.hw.dao.dto.QuestionDto;
 import ru.otus.hw.domain.Question;
+import ru.otus.hw.exceptions.QuestionReadException;
 
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class CsvQuestionDao implements QuestionDao {
@@ -13,11 +20,30 @@ public class CsvQuestionDao implements QuestionDao {
 
     @Override
     public List<Question> findAll() {
-        // Использовать CsvToBean
-        // https://opencsv.sourceforge.net/#collection_based_bean_fields_one_to_many_mappings
-        // Использовать QuestionReadException
-        // Про ресурсы: https://mkyong.com/java/java-read-a-file-from-resources-folder/
+        var questionDtoList = parseCsvToQuestionDto(fileNameProvider);
+        return transferCsvToDomain(questionDtoList);
+    }
 
-        return new ArrayList<>();
+    private List<QuestionDto> parseCsvToQuestionDto(TestFileNameProvider fileNameProvider) {
+        var classLoader = getClass().getClassLoader();
+        try (var inputStream = classLoader.getResourceAsStream(fileNameProvider.getTestFileName());
+             var streamReader = new InputStreamReader(
+                     Objects.requireNonNull(inputStream), StandardCharsets.UTF_8)
+        ) {
+            var csvReader = new CsvToBeanBuilder<QuestionDto>(streamReader)
+                    .withType(QuestionDto.class).withSeparator(';').withSkipLines(1).build();
+            return csvReader.parse();
+        } catch (Exception e) {
+            throw new QuestionReadException("Error of reading file with questions!", e.fillInStackTrace());
+        }
+    }
+
+    @NonNull
+    private List<Question> transferCsvToDomain(@NonNull List<QuestionDto> dtoList) {
+        List<Question> questionList = new ArrayList<>();
+        for (QuestionDto dto : dtoList) {
+            questionList.add(dto.toDomainObject());
+        }
+        return questionList;
     }
 }
