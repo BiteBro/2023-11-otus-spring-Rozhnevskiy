@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
+
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -23,11 +24,11 @@ public class TestServiceImpl implements TestService {
         }
     }
 
-    private String formattedAnswerString(List<Answer> answers){
+    private String formattedAnswerString(List<Answer> answers) {
         StringBuilder answersString = new StringBuilder();
         answersString.append("\t Variants of answers: \n\t\t");
-        for (int count = 0; count < answers.size(); count++){
-            answersString.append("N" + (count+1) + " : " + answers.get(count).toString() + "\n\t\t");
+        for (int count = 0; count < answers.size(); count++) {
+            answersString.append("N" + (count + 1) + " : " + answers.get(count).toString() + "\n\t\t");
         }
         return answersString.toString();
     }
