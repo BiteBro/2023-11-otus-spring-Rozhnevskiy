@@ -34,7 +34,7 @@ public class CsvQuestionDao implements QuestionDao {
                     .withType(QuestionDto.class).withSeparator(';').withSkipLines(1).build();
             return csvReader.parse();
         } catch (Exception e) {
-            throw new QuestionReadException("Error of reading file with questions!", e.fillInStackTrace());
+            throw new QuestionReadException("Error of reading file with questions!", e);
         }
     }
 
