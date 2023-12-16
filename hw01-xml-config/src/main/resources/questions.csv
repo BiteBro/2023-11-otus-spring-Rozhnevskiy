@@ -3,4 +3,4 @@ Is there life on Mars?;Science doesn't know this yet%true|Certainly. The red UFO
 How should resources be loaded form jar in Java?;ClassLoader#geResourceAsStream or ClassPathResource#getInputStream%true|ClassLoader#geResource#getFile + FileReader%false|Wingardium Leviosa%false
 Which option is a good way to handle the exception?;@SneakyThrow%false|e.printStackTrace()%false|Rethrow with wrapping in business exception (for example, QuestionReadException)%true|Ignoring exception%false
 What brand of car does the concern VAG not produce?;Lamborghini%false|Ferrari%true|Porsche%false
-Which cat was tabby?;Tom from the cartoon Tom and Jerry%false|Motroskin from carton Prostokvashino%true|Felix from carton Felix the Cat%false
+Which cat was tabby?;Tom from the cartoon Tom and Jerry%false|Motroskin from cartoon Prostokvashino%true|Felix from cartoon Felix the Cat%false
