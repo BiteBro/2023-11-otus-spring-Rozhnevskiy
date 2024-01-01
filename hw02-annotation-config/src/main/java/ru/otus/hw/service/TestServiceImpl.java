@@ -30,14 +30,9 @@ public class TestServiceImpl implements TestService {
             ioService.printLine(formatAnswer.formattedAnswersString(answers));
             int inputNumber = ioService.readIntForRangeWithPrompt(1, answers.size(),
                     "Insert number of answer!", "Error. Please enter the answer number again!");
-
-            boolean isAnswerValid = returnTrueOrFalseAnswer(answers, inputNumber);
+            boolean isAnswerValid = question.checkAnswer(inputNumber);
             testResult.applyAnswer(question, isAnswerValid);
         }
         return testResult;
-    }
-
-    private boolean returnTrueOrFalseAnswer(List<Answer> answers, int numberOfAnswer) {
-        return answers.get(numberOfAnswer - 1).isCorrect();
     }
 }
