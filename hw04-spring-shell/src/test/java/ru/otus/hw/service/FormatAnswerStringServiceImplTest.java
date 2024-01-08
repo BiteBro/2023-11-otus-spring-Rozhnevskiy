@@ -2,6 +2,7 @@ package ru.otus.hw.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.otus.hw.domain.Answer;
 
 import java.util.Arrays;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 class FormatAnswerStringServiceImplTest {
     private static final String STRING_TEMPLATE = """
             \t\tN1 :  Science doesn't know this yet

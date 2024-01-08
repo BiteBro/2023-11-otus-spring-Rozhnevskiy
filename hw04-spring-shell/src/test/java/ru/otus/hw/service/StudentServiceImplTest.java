@@ -3,9 +3,11 @@ package ru.otus.hw.service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 class StudentServiceImplTest {
 
     private final LocalizedIOService localizedIOService = Mockito.mock(LocalizedIOService.class);
