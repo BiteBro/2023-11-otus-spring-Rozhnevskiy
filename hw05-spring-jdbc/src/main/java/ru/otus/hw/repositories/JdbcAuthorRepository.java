@@ -27,8 +27,9 @@ public class JdbcAuthorRepository implements AuthorRepository {
     @Override
     public Optional<Author> findById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        return Optional.ofNullable(jdbcOperations.queryForObject(
-                "SELECT id, full_name FROM authors WHERE id = :id", params, new AuthorRowMapper()));
+        List<Author> authors = jdbcOperations.query(
+                "SELECT id, full_name FROM authors WHERE id = :id", params, new AuthorRowMapper());
+        return authors.stream().findFirst();
     }
 
     private static class AuthorRowMapper implements RowMapper<Author> {

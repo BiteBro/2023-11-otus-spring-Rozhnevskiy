@@ -27,8 +27,9 @@ public class JdbcGenreRepository implements GenreRepository {
     @Override
     public Optional<Genre> findById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        return Optional.ofNullable(jdbcOperations.queryForObject(
-                "SELECT id, name FROM genres WHERE id = :id", params, new GnreRowMapper()));
+        List<Genre> genres = jdbcOperations.query(
+                "SELECT id, name FROM genres WHERE id = :id", params, new GnreRowMapper());
+        return genres.stream().findFirst();
     }
 
     private static class GnreRowMapper implements RowMapper<Genre> {

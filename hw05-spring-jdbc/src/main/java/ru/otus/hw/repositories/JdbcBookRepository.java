@@ -1,7 +1,6 @@
 package ru.otus.hw.repositories;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -14,11 +13,7 @@ import ru.otus.hw.models.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Repository
@@ -29,19 +24,15 @@ public class JdbcBookRepository implements BookRepository {
     @Override
     public Optional<Book> findById(long id) {
         var params = Collections.singletonMap("id", id);
-        try {
-            return Optional.ofNullable(jdbcOperations.queryForObject(
-                    """
-                            SELECT books.id, books.title, books.author_id, authors.full_name, books.genre_id, genres.name
-                            FROM books
-                            JOIN authors ON books.author_id = authors.id
-                            JOIN genres ON books.genre_id = genres.id
-                            WHERE books.id = :id""",
-                    params, new BookRowMapper())
-            );
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
+        List<Book> books = jdbcOperations.query(
+                """
+                        SELECT books.id, books.title, books.author_id, authors.full_name, books.genre_id, genres.name
+                        FROM books
+                        JOIN authors ON books.author_id = authors.id
+                        JOIN genres ON books.genre_id = genres.id
+                        WHERE books.id = :id""",
+                params, new BookRowMapper());
+        return books.stream().findFirst();
     }
 
     @Override
