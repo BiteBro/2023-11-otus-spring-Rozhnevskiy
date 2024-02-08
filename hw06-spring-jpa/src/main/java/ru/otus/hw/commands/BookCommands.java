@@ -34,7 +34,7 @@ public class BookCommands {
     // bins newBook 1 1
     @ShellMethod(value = "Insert book", key = "bins")
     public String insertBook(String title, long authorId, long genreId) {
-        var savedBook = bookService.insert(title, authorId, genreId);
+        var savedBook = bookService.create(title, authorId, genreId);
         return bookConverter.bookToString(savedBook);
     }
 

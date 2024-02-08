@@ -35,14 +35,16 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public Book insert(String title, long authorId, long genreId) {
-        return save(0, title, authorId, genreId);
+    public Book create(String title, long authorId, long genreId) {
+        Book book = createOrUpdate(0, title, authorId, genreId);
+        return bookRepository.save(book);
     }
 
     @Transactional
     @Override
     public Book update(long id, String title, long authorId, long genreId) {
-        return save(id, title, authorId, genreId);
+        Book book = createOrUpdate(id, title, authorId, genreId);
+        return bookRepository.save(book);
     }
 
     @Transactional
@@ -51,13 +53,25 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
-    private Book save(long id, String title, long authorId, long genreId) {
+
+    // Хочется узнать вашего мнения!
+    // Насколько правильно делать такой метод, вроде как ушел от дублирования кода, но создал метод с двумя действиями.
+    private Book createOrUpdate(long id, String title, long authorId, long genreId) {
+        Book book;
+        if (id != 0) {
+            book = bookRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
+        } else {
+            book = new Book();
+        }
         var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)
                 .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
-        var book = new Book(id, title, author, genre);
-        bookRepository.save(book);
+        book.setTitle(title);
+        book.setAuthor(author);
+        book.setGenre(genre);
         return book;
     }
+
 }

@@ -24,7 +24,7 @@ public class CommentCommands {
 
     @ShellMethod(value = "Get all comments to book", key = "cbbid")
     public String findCommentsByBookId(long id) {
-        return commentService.findCommentsByBookId(id).stream().map(commentConverter::commentToString)
+        return commentService.findByBookId(id).stream().map(commentConverter::commentToString)
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
 }

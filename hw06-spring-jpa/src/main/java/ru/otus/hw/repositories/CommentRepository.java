@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface CommentRepository {
     Optional<Comment> findById(long id);
 
-    List<Comment> findCommentsByBookId(long bookId);
+    List<Comment> findByBookId(long bookId);
 
     Comment save(Comment comment);
 

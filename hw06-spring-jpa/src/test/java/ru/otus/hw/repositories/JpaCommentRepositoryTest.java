@@ -12,7 +12,6 @@ import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.models.Genre;
-import ru.otus.hw.repositories.JpaCommentRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,7 @@ public class JpaCommentRepositoryTest {
     @ParameterizedTest
     @MethodSource("getDbBooks")
     void shouldReturnCorrectCommentByBookId(Book expectedBook) {
-        var actualComment = repository.findCommentsByBookId(expectedBook.getId());
+        var actualComment = repository.findByBookId(expectedBook.getId());
         var expectedComment = dbComments.stream()
                 .filter(comment -> comment.getBook().getId() == expectedBook.getId()).toList();
         assertThat(actualComment).isEqualTo(expectedComment);
