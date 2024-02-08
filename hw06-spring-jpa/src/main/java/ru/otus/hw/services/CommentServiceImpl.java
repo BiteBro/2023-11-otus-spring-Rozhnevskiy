@@ -31,18 +31,21 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findByBookId(id);
     }
 
+    @Transactional
     @Override
     public Comment create(String textContent, long bookId) {
         Comment comment = createOrUpdate(0, textContent, bookId);
         return commentRepository.save(comment);
     }
 
+    @Transactional
     @Override
     public Comment update(long id, String textContent, long bookId) {
         Comment comment = createOrUpdate(id, textContent, bookId);
         return commentRepository.save(comment);
     }
 
+    @Transactional
     @Override
     public void deleteById(long id) {
         commentRepository.deleteById(id);
