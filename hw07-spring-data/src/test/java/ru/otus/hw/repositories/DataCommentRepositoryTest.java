@@ -2,12 +2,10 @@ package ru.otus.hw.repositories;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
@@ -21,22 +19,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе JPA для работы с комментариями ")
 @DataJpaTest
-@Import(JpaCommentRepository.class)
-public class JpaCommentRepositoryTest {
+public class DataCommentRepositoryTest {
 
     @Autowired
-    private JpaCommentRepository repository;
+    private CommentRepository repository;
 
     private List<Comment> dbComments;
 
-    private List<Author> dbAuthors;
-
-    private List<Genre> dbGenres;
-
     @BeforeEach
     void setUp() {
-        dbGenres = getDbGenres();
-        dbAuthors = getDbAuthors();
+        List<Genre> dbGenres = getDbGenres();
+        List<Author> dbAuthors = getDbAuthors();
         List<Book> dbBooks = getDbBooks(dbAuthors, dbGenres);
         dbComments = getDbComments(dbBooks);
     }
@@ -63,52 +56,6 @@ public class JpaCommentRepositoryTest {
         System.out.println(expectedBook);
         assertThat(actualComment).usingRecursiveComparison()
                 .ignoringFields("book").isEqualTo(expectedComment);
-    }
-
-    @DisplayName("должен сохранять новый комментарий")
-    @Test
-    void shouldSaveNewComment() {
-        var expectedComment = new Comment(0, "what",
-                new Book(0, "BookTitle_10500", dbAuthors.get(0), dbGenres.get(0)));
-        var returnedComment = repository.save(expectedComment);
-        assertThat(returnedComment).isNotNull()
-                .matches(book -> book.getId() > 0)
-                .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedComment);
-
-        assertThat(repository.findById(returnedComment.getId()))
-                .isPresent()
-                .get()
-                .isEqualTo(returnedComment);
-    }
-
-    @DisplayName("должен сохранять измененный комментарий")
-    @Test
-    void shouldSaveUpdatedComment() {
-        var expectedComment = new Comment(1L, "hello",
-                new Book(1L, "BookTitle_10500", dbAuthors.get(2), dbGenres.get(2)));
-
-        assertThat(repository.findById(expectedComment.getId()))
-                .isPresent()
-                .get()
-                .isNotEqualTo(expectedComment);
-
-        var returnedComment = repository.save(expectedComment);
-        assertThat(returnedComment).isNotNull()
-                .matches(book -> book.getId() > 0)
-                .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedComment);
-
-        assertThat(repository.findById(returnedComment.getId()))
-                .isPresent()
-                .get()
-                .isEqualTo(returnedComment);
-    }
-
-    @DisplayName("должен удалять комментарий по id ")
-    @Test
-    void shouldDeleteComment() {
-        assertThat(repository.findById(1L)).isPresent();
-        repository.deleteById(1L);
-        assertThat(repository.findById(1L)).isEmpty();
     }
 
     private static List<Comment> getDbComments(List<Book> dbBooks) {

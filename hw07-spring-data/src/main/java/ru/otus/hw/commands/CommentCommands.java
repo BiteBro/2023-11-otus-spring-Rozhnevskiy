@@ -27,4 +27,9 @@ public class CommentCommands {
         return commentService.findByBookId(id).stream().map(commentConverter::commentToString)
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
+
+    @ShellMethod(value = "Delete comment by id", key = "cdel")
+    public void deleteBook(long id) {
+        commentService.deleteById(id);
+    }
 }
