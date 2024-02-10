@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
 
 import java.util.List;
@@ -47,7 +48,8 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        Book book = entityManager.find(Book.class, id);
+        Book book = Optional.of(entityManager.find(Book.class, id))
+                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
         entityManager.remove(book);
     }
 }

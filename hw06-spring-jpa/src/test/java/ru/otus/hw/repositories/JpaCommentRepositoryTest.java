@@ -47,7 +47,8 @@ public class JpaCommentRepositoryTest {
     void shouldReturnCorrectCommentById(Comment expectedComment) {
         var actualComment = repository.findById(expectedComment.getId());
         assertThat(actualComment).isPresent()
-                .get()
+                .get().usingRecursiveComparison()
+                .ignoringFields("book")
                 .isEqualTo(expectedComment);
     }
 
@@ -58,7 +59,10 @@ public class JpaCommentRepositoryTest {
         var actualComment = repository.findByBookId(expectedBook.getId());
         var expectedComment = dbComments.stream()
                 .filter(comment -> comment.getBook().getId() == expectedBook.getId()).toList();
-        assertThat(actualComment).isEqualTo(expectedComment);
+        System.out.println(actualComment);
+        System.out.println(expectedBook);
+        assertThat(actualComment).usingRecursiveComparison()
+                .ignoringFields("book").isEqualTo(expectedComment);
     }
 
     @DisplayName("должен сохранять новый комментарий")

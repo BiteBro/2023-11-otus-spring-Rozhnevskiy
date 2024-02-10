@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Genre;
-import ru.otus.hw.repositories.JpaGenreRepository;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -47,8 +46,10 @@ public class JpaGenreRepositoryTest {
     @MethodSource("getDbGenres")
     public void shouldReturnCorrectGenreById(Genre expectedGenre){
         var actualGenre = repository.findById(expectedGenre.getId());
+        System.out.println(expectedGenre);
+        System.out.println(actualGenre);
         assertThat(actualGenre).isPresent()
-                .get()
+                .get().usingRecursiveComparison()
                 .isEqualTo(expectedGenre);
     }
 

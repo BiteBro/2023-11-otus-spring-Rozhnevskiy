@@ -25,4 +25,5 @@ public class JpaGenreRepository implements GenreRepository {
     public Optional<Genre> findById(long id) {
         return Optional.ofNullable(entityManager.find(Genre.class, id));
     }
+
 }

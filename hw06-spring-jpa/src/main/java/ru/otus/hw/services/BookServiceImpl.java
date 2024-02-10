@@ -36,34 +36,22 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public Book create(String title, long authorId, long genreId) {
-        Book book = createOrUpdate(0, title, authorId, genreId);
+        var author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
+        var genre = genreRepository.findById(genreId)
+                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
+        Book book = new Book(0, title, author, genre);
+        book.setTitle(title);
+        book.setAuthor(author);
+        book.setGenre(genre);
         return bookRepository.save(book);
     }
 
     @Transactional
     @Override
     public Book update(long id, String title, long authorId, long genreId) {
-        Book book = createOrUpdate(id, title, authorId, genreId);
-        return bookRepository.save(book);
-    }
-
-    @Transactional
-    @Override
-    public void deleteById(long id) {
-        bookRepository.deleteById(id);
-    }
-
-
-    // Хочется узнать вашего мнения!
-    // Насколько правильно делать такой метод, вроде как ушел от дублирования кода, но создал метод с двумя действиями.
-    private Book createOrUpdate(long id, String title, long authorId, long genreId) {
-        Book book;
-        if (id != 0) {
-            book = bookRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
-        } else {
-            book = new Book();
-        }
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
         var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)
@@ -71,7 +59,13 @@ public class BookServiceImpl implements BookService {
         book.setTitle(title);
         book.setAuthor(author);
         book.setGenre(genre);
-        return book;
+        return bookRepository.save(book);
+    }
+
+    @Transactional
+    @Override
+    public void deleteById(long id) {
+        bookRepository.deleteById(id);
     }
 
 }

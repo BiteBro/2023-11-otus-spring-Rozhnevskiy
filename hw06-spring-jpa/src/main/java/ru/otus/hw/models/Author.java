@@ -7,11 +7,10 @@ import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-@Data
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -23,4 +22,20 @@ public class Author {
 
     @Column(name = "full_name", nullable = false)
     private String fullName;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 }

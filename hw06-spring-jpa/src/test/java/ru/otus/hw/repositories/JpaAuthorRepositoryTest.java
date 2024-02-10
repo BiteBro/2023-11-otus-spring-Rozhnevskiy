@@ -48,7 +48,7 @@ public class JpaAuthorRepositoryTest {
     void shouldReturnCorrectAuthorById(Author expectedAuthor){
         var actualAuthor = repository.findById(expectedAuthor.getId());
         assertThat(actualAuthor).isPresent()
-                .get()
+                .get().usingRecursiveComparison()
                 .isEqualTo(expectedAuthor);
     }
 

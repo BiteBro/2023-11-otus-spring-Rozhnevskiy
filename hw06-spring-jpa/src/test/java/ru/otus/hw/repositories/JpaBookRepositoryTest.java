@@ -45,7 +45,7 @@ class JpaBookRepositoryTest {
     void shouldReturnCorrectBookById(Book expectedBook) {
         var actualBook = repository.findById(expectedBook.getId());
         assertThat(actualBook).isPresent()
-                .get()
+                .get().usingRecursiveComparison()
                 .isEqualTo(expectedBook);
     }
 

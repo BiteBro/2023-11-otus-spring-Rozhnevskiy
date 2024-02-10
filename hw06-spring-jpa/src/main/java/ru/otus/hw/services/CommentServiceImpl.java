@@ -34,14 +34,21 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public Comment create(String textContent, long bookId) {
-        Comment comment = createOrUpdate(0, textContent, bookId);
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
+        Comment comment = new Comment(0, textContent, book);
         return commentRepository.save(comment);
     }
 
     @Transactional
     @Override
     public Comment update(long id, String textContent, long bookId) {
-        Comment comment = createOrUpdate(id, textContent, bookId);
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Comment with id %d not found".formatted(id)));
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
+        comment.setTextContent(textContent);
+        comment.setBook(book);
         return commentRepository.save(comment);
     }
 
@@ -51,20 +58,4 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteById(id);
     }
 
-    // Хочется узнать вашего мнения!
-    // Насколько правильно делать такой метод, вроде как ушел от дублирования кода, но создал метод с двумя действиями.
-    private Comment createOrUpdate(long id, String textContent, long bookId) {
-        Comment comment;
-        if (id != 0) {
-            comment = commentRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Comment with id %d not found".formatted(id)));
-        } else {
-            comment = new Comment();
-        }
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
-        comment.setTextContent(textContent);
-        comment.setBook(book);
-        return comment;
-    }
 }
