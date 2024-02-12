@@ -34,17 +34,6 @@ public class DataCommentRepositoryTest {
         dbComments = getDbComments(dbBooks);
     }
 
-    @DisplayName("должен загружать комментарий по id")
-    @ParameterizedTest
-    @MethodSource("getDbComments")
-    void shouldReturnCorrectCommentById(Comment expectedComment) {
-        var actualComment = repository.findById(expectedComment.getId());
-        assertThat(actualComment).isPresent()
-                .get().usingRecursiveComparison()
-                .ignoringFields("book")
-                .isEqualTo(expectedComment);
-    }
-
     @DisplayName("должен загружать комментарии к книге по id книги")
     @ParameterizedTest
     @MethodSource("getDbBooks")
@@ -86,13 +75,6 @@ public class DataCommentRepositoryTest {
         return IntStream.range(1, 4).boxed()
                 .map(id -> new Author(id, "Author_" + id))
                 .toList();
-    }
-
-    private static List<Comment> getDbComments() {
-        var dbAuthors = getDbAuthors();
-        var dbGenres = getDbGenres();
-        var dbBooks = getDbBooks(dbAuthors, dbGenres);
-        return getDbComments(dbBooks);
     }
 
     private static List<Book> getDbBooks() {

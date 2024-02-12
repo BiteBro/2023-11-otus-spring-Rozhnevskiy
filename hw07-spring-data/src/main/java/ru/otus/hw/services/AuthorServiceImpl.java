@@ -8,7 +8,6 @@ import ru.otus.hw.repositories.AuthorRepository;
 
 import java.util.List;
 
-
 @RequiredArgsConstructor
 @Service
 public class AuthorServiceImpl implements AuthorService {

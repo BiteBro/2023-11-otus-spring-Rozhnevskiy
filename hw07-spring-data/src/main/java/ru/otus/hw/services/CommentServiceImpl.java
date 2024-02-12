@@ -42,22 +42,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public Comment update(long id, String textContent, long bookId) {
+    public Comment update(long id, String textContent) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Comment with id %d not found".formatted(id)));
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
         comment.setTextContent(textContent);
-        comment.setBook(book);
         return commentRepository.save(comment);
     }
 
     @Transactional
     @Override
     public void deleteById(long id) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Comment with id %d not found".formatted(id)));
-        commentRepository.deleteById(comment.getId());
+        commentRepository.deleteById(id);
     }
 
 }
