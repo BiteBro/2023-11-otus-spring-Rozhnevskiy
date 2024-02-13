@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе JPA для работы с комментариями ")
 @DataJpaTest
-public class DataCommentRepositoryTest {
+public class CommentRepositoryTest {
 
     @Autowired
     private CommentRepository repository;
@@ -41,8 +41,6 @@ public class DataCommentRepositoryTest {
         var actualComment = repository.findByBookId(expectedBook.getId());
         var expectedComment = dbComments.stream()
                 .filter(comment -> comment.getBook().getId() == expectedBook.getId()).toList();
-        System.out.println(actualComment);
-        System.out.println(expectedBook);
         assertThat(actualComment).usingRecursiveComparison()
                 .ignoringFields("book").isEqualTo(expectedComment);
     }

@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе JPA для работы с книгами ")
 @DataJpaTest
-class DataBookRepositoryTest {
+class BookRepositoryTest {
 
     @Autowired
     private BookRepository repository;
@@ -50,7 +50,6 @@ class DataBookRepositoryTest {
         assertThat(actualBooks)
                 .usingRecursiveComparison()
                 .isEqualTo(expectedBooks);
-        actualBooks.forEach(System.out::println);
     }
 
     private static List<Author> getDbAuthors() {
