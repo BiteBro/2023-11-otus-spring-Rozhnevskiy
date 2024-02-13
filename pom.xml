@@ -15,6 +15,7 @@
         <module>hw04-spring-shell</module>
         <module>hw05-spring-jdbc</module>
         <module>hw06-spring-jpa</module>
+        <module>hw07-spring-data</module>
     </modules>
 
     <properties>
