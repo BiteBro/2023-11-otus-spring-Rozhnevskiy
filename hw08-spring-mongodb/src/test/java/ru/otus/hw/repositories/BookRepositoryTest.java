@@ -11,23 +11,23 @@ import ru.otus.hw.models.Genre;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Book repository test")
-public class BookRepositoryTest extends AbstractRepositoryTest{
+public class BookRepositoryTest extends AbstractRepositoryTest {
 
     @Autowired
     private BookRepository repository;
 
-    private final Author author = new Author("one", "Author_1");;
+    private final Author author = new Author("one", "Author_1");
 
-    private final Genre genre = new Genre("one", "Genre_1");;
-
-    private final Book expectedBook = new Book("one", "Book_1", author, genre);;
+    private final Genre genre = new Genre("one", "Genre_1");
 
     @Test
     @DisplayName("Должен загружать книгу по id")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-    void shouldReturnBookById(){
+    void shouldReturnBookById() {
+        var book = new Book("one", "Book_1", author, genre);
+        var expectedBook = repository.save(book);
         var actualBook = repository.findById(expectedBook.getId());
-
+        System.out.println(actualBook);
         assertThat(actualBook).isPresent().get().usingRecursiveComparison().isEqualTo(expectedBook);
     }
 
@@ -56,19 +56,18 @@ public class BookRepositoryTest extends AbstractRepositoryTest{
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void shouldSaveUpdatedBook() {
         var expectedBook = new Book("one", "BookTitle", author, genre);
+        var returnedBook = repository.save(expectedBook);
 
         assertThat(repository.findById(expectedBook.getId()))
                 .isPresent()
                 .get()
-                .isNotEqualTo(expectedBook);
-
-        var returnedBook = repository.save(expectedBook);
+                .isNotEqualTo(returnedBook);
 
         assertThat(returnedBook).isNotNull()
                 .matches(book -> book.getId() != null)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
 
-        assertThat(repository.findById(returnedBook.getId()))
+        assertThat(repository.findById(expectedBook.getId()))
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
