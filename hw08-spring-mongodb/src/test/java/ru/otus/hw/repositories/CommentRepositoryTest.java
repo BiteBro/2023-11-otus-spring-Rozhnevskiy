@@ -1,6 +1,5 @@
 package ru.otus.hw.repositories;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +22,19 @@ public class CommentRepositoryTest extends AbstractRepositoryTest {
 
     private final Book book_1 = new Book("one", "Book_1", author_1, genre_1);
 
+    private final Comment expectedComment = new Comment("one", "Comment_1", book_1);
+
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @DisplayName("должен загружать комментарий по id")
     @Test
     void shouldReturnExpectedCommentById() {
-        var comment = new Comment("one", "Comment_1", book_1);
-        var returnedComment = repository.save(comment);
-        var actualComment = repository.findById(returnedComment.getId());
+        var actualComment = repository.findById(expectedComment.getId());
 
         assertThat(actualComment)
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
-                .isEqualTo(returnedComment);
+                .isEqualTo(expectedComment);
     }
 
     @DisplayName("должен сохранять новый комментарий")
