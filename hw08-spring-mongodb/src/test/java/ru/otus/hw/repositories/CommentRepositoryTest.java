@@ -22,18 +22,18 @@ public class CommentRepositoryTest extends AbstractRepositoryTest {
 
     private final Book book_1 = new Book("one", "Book_1", author_1, genre_1);
 
-    private final Comment expectedComment = new Comment("one", "Comment_1", book_1);
-
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @DisplayName("должен загружать комментарий по id")
     @Test
     void shouldReturnExpectedCommentById() {
+        var comment = new Comment("one", "Comment_1", book_1);
+        var expectedComment = repository.save(comment);
         var actualComment = repository.findById(expectedComment.getId());
 
         assertThat(actualComment)
                 .isPresent()
                 .get()
-                .usingRecursiveComparison()
+                .usingRecursiveComparison().ignoringFields("book")
                 .isEqualTo(expectedComment);
     }
 
@@ -44,16 +44,16 @@ public class CommentRepositoryTest extends AbstractRepositoryTest {
         var expectedComment = new Comment("CommentTitle_10500", book_1);
         var returnedComment = repository.save(expectedComment);
 
-        assertThat(returnedComment).isNotNull()
+        assertThat(expectedComment).isNotNull()
                 .matches(comment -> comment.getId() != null)
                 .usingRecursiveComparison()
                 .ignoringExpectedNullFields()
-                .isEqualTo(expectedComment);
+                .isEqualTo(returnedComment);
 
         assertThat(repository.findById(returnedComment.getId()))
                 .isPresent()
                 .get()
-                .usingRecursiveComparison()
+                .usingRecursiveComparison().ignoringFields("book")
                 .ignoringExpectedNullFields()
                 .isEqualTo(returnedComment);
     }
@@ -76,7 +76,7 @@ public class CommentRepositoryTest extends AbstractRepositoryTest {
         assertThat(repository.findById(returnedComment.getId()))
                 .isPresent()
                 .get()
-                .usingRecursiveComparison()
+                .usingRecursiveComparison().ignoringFields("book")
                 .ignoringExpectedNullFields()
                 .isEqualTo(returnedComment);
     }

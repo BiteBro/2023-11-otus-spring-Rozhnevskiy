@@ -27,20 +27,25 @@ public class BookRepositoryTest extends AbstractRepositoryTest {
         var book = new Book("one", "Book_1", author, genre);
         var expectedBook = repository.save(book);
         var actualBook = repository.findById(expectedBook.getId());
-        System.out.println(actualBook);
-        assertThat(actualBook).isPresent().get().usingRecursiveComparison().isEqualTo(expectedBook);
+
+        assertThat(actualBook)
+                .isPresent()
+                .get()
+                .usingRecursiveComparison()
+                .isEqualTo(expectedBook);
     }
 
     @DisplayName("Должен сохранять новую книгу")
     @Test
     void shouldSaveNewBook() {
         var expectedBook = new Book("BookTitle", author, genre);
-
         var returnedBook = repository.save(expectedBook);
 
-        assertThat(returnedBook).isNotNull()
+        assertThat(returnedBook)
+                .isNotNull()
                 .matches(book -> book.getId() != null)
-                .usingRecursiveComparison().ignoringExpectedNullFields()
+                .usingRecursiveComparison()
+                .ignoringExpectedNullFields()
                 .isEqualTo(expectedBook);
 
         assertThat(repository.findById(returnedBook.getId()))
@@ -56,16 +61,18 @@ public class BookRepositoryTest extends AbstractRepositoryTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void shouldSaveUpdatedBook() {
         var expectedBook = new Book("one", "BookTitle", author, genre);
-        var returnedBook = repository.save(expectedBook);
+        var savedBook = new Book("one", "BookTitle", author, genre);
 
-        assertThat(repository.findById(expectedBook.getId()))
-                .isPresent()
-                .get()
-                .isNotEqualTo(returnedBook);
+        var returnedBook = repository.save(savedBook);
+        returnedBook.setTitle("UpdateBookTitle");
+        var updateBook = repository.save(returnedBook);
 
-        assertThat(returnedBook).isNotNull()
+        assertThat(returnedBook)
+                .isNotNull()
                 .matches(book -> book.getId() != null)
-                .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
+                .usingRecursiveComparison()
+                .ignoringExpectedNullFields()
+                .isEqualTo(savedBook);
 
         assertThat(repository.findById(expectedBook.getId()))
                 .isPresent()
@@ -73,6 +80,11 @@ public class BookRepositoryTest extends AbstractRepositoryTest {
                 .usingRecursiveComparison()
                 .ignoringExpectedNullFields()
                 .isEqualTo(returnedBook);
+
+        assertThat(repository.findById(updateBook.getId()))
+                .isPresent()
+                .get()
+                .isNotEqualTo(expectedBook);
     }
 
 }
