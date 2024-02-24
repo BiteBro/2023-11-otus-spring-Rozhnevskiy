@@ -80,4 +80,17 @@ public class CommentRepositoryTest extends AbstractRepositoryTest {
                 .ignoringExpectedNullFields()
                 .isEqualTo(returnedComment);
     }
+
+    @DisplayName("Должен удалять комментарий по id книги")
+    @Test
+    void shouldDeleteByBookId(){
+        var expectedComment = new Comment("one", "CommentTitle_10500", book_1);
+        var returnedComment = repository.save(expectedComment);
+
+        Book book = returnedComment.getBook();
+        repository.deleteByBookId(book.getId());
+
+        assertThat(repository.findByBookId(book.getId())).isEmpty();
+        assertThat(repository.findById(expectedComment.getId())).isEmpty();
+    }
 }
