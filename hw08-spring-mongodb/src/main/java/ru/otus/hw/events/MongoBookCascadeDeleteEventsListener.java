@@ -13,6 +13,7 @@ import ru.otus.hw.services.CommentService;
 public class MongoBookCascadeDeleteEventsListener extends AbstractMongoEventListener<Book> {
 
     private final CommentService service;
+
     private final BookService bookService;
 
     @Override

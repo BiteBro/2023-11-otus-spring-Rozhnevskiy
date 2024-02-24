@@ -50,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteByBookId(String id){
+    public void deleteByBookId(String id) {
         commentRepository.deleteByBookId(id);
     }
 
