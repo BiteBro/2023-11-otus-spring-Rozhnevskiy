@@ -16,6 +16,7 @@
         <module>hw05-spring-jdbc</module>
         <module>hw06-spring-jpa</module>
         <module>hw07-spring-data</module>
+        <module>hw08-spring-mongodb</module>
     </modules>
 
     <properties>
