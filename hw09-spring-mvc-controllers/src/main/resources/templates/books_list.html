@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+  <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .books {
+            width: 300px;
+            border-spacing: 60px 15px;
+        }
+
+        .books tr td, th {
+            padding: 5px;
+        }
+
+        .books td:last-child, td:first-child {
+            width: 50px;
+        }
+
+    </style>
+
+</head>
+<body>
+  <h2>Список книг</h2>
+  <table class="books">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>title</th>
+        <th>Author</th>
+        <th>Genre</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="book : ${books}">
+        <td th:text="${book.id}">1</td>
+        <td th:text="${book.title}">John Doe</td>
+        <td th:text="${book.author}">John Doe</td>
+        <td th:text="${book.genre}">John Doe</td>
+        <td>
+          <a href="edit.html" th:href="@{/edit(id=${book.id})}">
+            <input type="button" value="изменить"/>
+          </a>
+        </td>
+        <td>
+          <form th:action="@{/delete(id=${book.id})}" method="post">
+            <input type="submit" value="удалить"/>
+          </form>
+        </td>
+      </tr>
+      <a href="edit.html" th:href="@{/save}">
+        <input type="button" value="создать"/>
+      </a>
+    </tbody>
+  </table>
+</body>
+</html>
