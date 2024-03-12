@@ -33,19 +33,18 @@ public class BookController {
     }
 
     @GetMapping("/edit")
-    public String editBook(@RequestParam("id") long id, Model model) {
-        var bookDTO = bookService.findById(id);
+    public String editBook(@RequestParam("bookId") long bookId, Model model) {
+        var bookDTO = bookService.findById(bookId);
         var authorsDTO = authorService.findAll();
         var genresDTO = genreService.findAll();
         model.addAttribute("book", bookDTO);
         model.addAttribute("authors", authorsDTO);
         model.addAttribute("genres", genresDTO);
-        return "edit";
+        return "book_edit";
     }
 
     @PostMapping("/edit")
     public String editBook(@ModelAttribute("book") BookDTO bookDTO, BindingResult bindingResult, Model model) {
-        System.out.println("i call post method editBook");
         bookService.update(bookDTO);
         return "redirect:/";
     }
@@ -57,19 +56,18 @@ public class BookController {
         model.addAttribute("book", new BookDTO());
         model.addAttribute("authors", authorsDTO);
         model.addAttribute("genres", genresDTO);
-        return "save";
+        return "book_save";
     }
 
     @PostMapping("/save")
     public String saveBook(@ModelAttribute("book") BookDTO bookDTO, BindingResult bindingResult, Model model) {
-        System.out.println("i call post method saveBook");
         bookService.create(bookDTO);
         return "redirect:/";
     }
 
-    @PostMapping("/delete{id}")
-    public String delete(@RequestParam("id") long id) {
-        bookService.deleteById(id);
+    @PostMapping("/delete")
+    public String delete(@RequestParam("bookId") long bookId) {
+        bookService.deleteById(bookId);
         return "redirect:/";
     }
 }

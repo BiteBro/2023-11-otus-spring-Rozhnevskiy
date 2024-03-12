@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>edit</title>
+
+  <style type="text/css">
+        body {
+            padding: 50px;
+        }
+        #btn {
+            margin-left: 35px
+        }
+    </style>
+</head>
+
+<body>
+<h2>Изменение комментария</h2>
+<form action="comment_edit.html" th:action="@{/comment_edit(commentId=${comment.id})}" method="post" th:object="${comment}">
+
+  <input type="hidden" readonly="readonly" name="id" th:value="*{id}"/>
+
+  <lable for="comment">Содержимое комментария</lable></br>
+  <input id="comment" type="text" name="textContent" th:value="*{textContent}"/></br></br>
+  <input type="submit" value="сохранить"/>
+</form>
+</br>
+<a href="comments_by_book.html" th:href="@{/comment(bookId=${comment.book.id})}">
+  <input type="submit" id="btn" value="назад"/>
+</a>
+</body>
+
+</html>

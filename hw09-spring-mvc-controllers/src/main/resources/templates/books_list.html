@@ -38,22 +38,27 @@
     </thead>
     <tbody>
       <tr th:each="book : ${books}">
-        <td th:text="${book.id}">1</td>
-        <td th:text="${book.title}">John Doe</td>
-        <td th:text="${book.author}">John Doe</td>
-        <td th:text="${book.genre}">John Doe</td>
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.genre}"></td>
         <td>
-          <a href="edit.html" th:href="@{/edit(id=${book.id})}">
+          <a href="comment_by_book.html" th:href="@{/comment(bookId=${book.id})}">
+            <input type="button" value="комментарии"/>
+          </a>
+        </td>
+        <td>
+          <a href="edit.html" th:href="@{/edit(bookId=${book.id})}">
             <input type="button" value="изменить"/>
           </a>
         </td>
         <td>
-          <form th:action="@{/delete(id=${book.id})}" method="post">
+          <form th:action="@{/delete(bookId=${book.id})}" method="post" onclick="return confirm('Подтвердите удаление')">
             <input type="submit" value="удалить"/>
           </form>
         </td>
       </tr>
-      <a href="edit.html" th:href="@{/save}">
+      <a href="book_save.html" th:href="@{/save}">
         <input type="button" value="создать"/>
       </a>
     </tbody>
