@@ -34,7 +34,7 @@
         <th>Content</th>
     </tr>
     </thead>
-    <tbody th:each="comment : ${comments}">
+    <tbody th:each="comment : ${commentDtoList}">
     <tr>
         <td th:text="${comment.textContent}"></td>
         <td>

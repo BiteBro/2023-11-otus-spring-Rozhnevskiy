@@ -1,17 +1,15 @@
 package ru.otus.hw.mapper;
 
-import ru.otus.hw.dto.AuthorDTO;
+import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.models.Author;
 
-public class AuthorMapper implements Mapper<Author, AuthorDTO> {
+public class AuthorMapper {
 
-    @Override
-    public Author toDomainObject(AuthorDTO dto) {
+    public Author toModel(AuthorDto dto) {
         return new Author(dto.getId(), dto.getFullName());
     }
 
-    @Override
-    public AuthorDTO toDto(Author author) {
-        return new AuthorDTO(author.getId(), author.getFullName());
+    public AuthorDto toDto(Author author) {
+        return new AuthorDto(author.getId(), author.getFullName());
     }
 }

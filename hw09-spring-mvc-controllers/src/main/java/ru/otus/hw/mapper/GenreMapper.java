@@ -1,17 +1,15 @@
 package ru.otus.hw.mapper;
 
-import ru.otus.hw.dto.GenreDTO;
+import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.models.Genre;
 
-public class GenreMapper implements Mapper<Genre, GenreDTO> {
+public class GenreMapper {
 
-    @Override
-    public Genre toDomainObject(GenreDTO dto) {
+    public Genre toModel(GenreDto dto) {
         return new Genre(dto.getId(), dto.getName());
     }
 
-    @Override
-    public GenreDTO toDto(Genre genre) {
-        return new GenreDTO(genre.getId(), genre.getName());
+    public GenreDto toDto(Genre genre) {
+        return new GenreDto(genre.getId(), genre.getName());
     }
 }
