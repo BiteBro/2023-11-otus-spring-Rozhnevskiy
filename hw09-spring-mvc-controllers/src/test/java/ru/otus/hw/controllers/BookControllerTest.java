@@ -12,6 +12,7 @@ import ru.otus.hw.dto.BookCreateDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.BookUpdateDto;
 import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.mapper.BookMapper;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
@@ -39,6 +40,9 @@ public class BookControllerTest {
 
     @MockBean
     private GenreService genreService;
+
+    @MockBean
+    private BookMapper bookMapper;
 
     @Test
     @DisplayName("Должен загружать список книг")
