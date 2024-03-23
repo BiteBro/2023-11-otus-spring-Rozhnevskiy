@@ -7,23 +7,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.controller.BookController;
-import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookCreateDto;
-import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.BookUpdateDto;
-import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.mapper.BookMapper;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookController.class)
@@ -44,30 +39,20 @@ public class BookControllerTest {
     @MockBean
     private BookMapper bookMapper;
 
-    @Test
-    @DisplayName("Должен загружать список книг")
-    void shouldLoadListBooks() throws Exception {
-        List<BookDto> books = getBooks();
-        when(bookService.findAll()).thenReturn(books);
 
-        mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("bookDtoList", books))
-                .andExpect(view().name("books_list"));
-    }
 
     @Test
     @DisplayName("Должен изменять книгу")
     void shouldUpdateBook() throws Exception {
-        BookUpdateDto bookUpdateDto = new BookUpdateDto(0, "0_book", 0, 0);
+        BookUpdateDto bookUpdateDto = new BookUpdateDto(1, "0_book", 1, 1);
 
-        mockMvc.perform(post("/edit")
+        mockMvc.perform(post("/book/edit")
                         .param("id", String.valueOf(bookUpdateDto.getId()))
                         .param("title", bookUpdateDto.getTitle())
-                        .param("author.id", String.valueOf(bookUpdateDto.getAuthorId()))
-                        .param("genre.id", String.valueOf(bookUpdateDto.getGenreId())))
+                        .param("authorId", String.valueOf(bookUpdateDto.getAuthorId()))
+                        .param("genreId", String.valueOf(bookUpdateDto.getGenreId())))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl("/book"));
 
         verify(bookService).update(bookUpdateDto);
     }
@@ -75,37 +60,49 @@ public class BookControllerTest {
     @Test
     @DisplayName("Должен создавать книгу")
     void shouldCreateBook() throws Exception {
-        BookCreateDto bookCreateDto = new BookCreateDto(0, "0_book", 0, 0);
+        BookCreateDto bookCreateDto = new BookCreateDto(0, "0_book", 1, 1);
 
-        mockMvc.perform(post("/save")
+        mockMvc.perform(post("/book/save")
                         .param("title", bookCreateDto.getTitle())
-                        .param("author.id", String.valueOf(bookCreateDto.getAuthorId()))
-                        .param("genre.id", String.valueOf(bookCreateDto.getGenreId())))
+                        .param("authorId", String.valueOf(bookCreateDto.getAuthorId()))
+                        .param("genreId", String.valueOf(bookCreateDto.getGenreId())))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl("/book"));
 
         verify(bookService).create(bookCreateDto);
+    }
+
+    @Test
+    @DisplayName("Должен возвращать код 400 при создании книги с пустым названием")
+    void shouldCreateOrUpdateBookWithEmptyTitle() throws Exception {
+        var bookCreateDto = new BookCreateDto(0, "", 1, 1);
+
+        mockMvc.perform(post("/book/save")
+                        .param("title", String.valueOf(bookCreateDto.getTitle()))
+                        .param("authorId", String.valueOf(bookCreateDto.getAuthorId()))
+                        .param("genreId", String.valueOf(bookCreateDto.getGenreId())))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Должен возвращать код 404 при при поиске книги")
+    void shouldReturnNotFound() throws Exception {
+        given(bookService.findById(1L)).willThrow(new EntityNotFoundException("empty"));
+        mockMvc.perform(get("/book/edit?bookId=1"))
+                        .andExpect(status().isNotFound());
     }
 
     @Test
     @DisplayName("Должен удалять книгу")
     void shouldDeleteBook() throws Exception {
         long id = 3L;
-        mockMvc.perform(post("/delete?bookId={id}", id))
+        mockMvc.perform(post("/book/delete?bookId={id}", id))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl("/book"));
 
         verify(bookService).deleteById(id);
     }
 
-    private List<BookDto> getBooks() {
-        List<BookDto> books = new ArrayList<>();
-        for (int i = 1; i < 6; i++) {
-            books.add(new BookDto(i, i + "_book",
-                    new AuthorDto(i, i + "_author"),
-                    new GenreDto(i, i + "_genre")));
-        }
-        return books;
-    }
+
 
 }

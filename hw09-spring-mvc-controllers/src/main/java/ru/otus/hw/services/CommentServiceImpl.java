@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class CommentServiceImpl implements CommentService {
+
     private final CommentRepository commentRepository;
 
     private final BookRepository bookRepository;

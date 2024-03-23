@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .books {
+            width: 300px;
+            border-spacing: 60px 15px;
+        }
+
+        .books tr td, th {
+            padding: 5px;
+        }
+
+        .books td:last-child, td:first-child {
+            width: 50px;
+        }
+
+    </style>
+
+</head>
+<body>
+<h2>Список авторов</h2>
+<table class="authors">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>fullName</th>
+
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="author : ${authorDtoList}">
+    <td th:text="${author.id}"></td>
+    <td th:text="${author.fullName}"></td>
+    <td>
+      <a href="author_edit.html" th:href="@{author/edit(authorId=${author.id})}">
+        <input type="button" value="изменить"/>
+      </a>
+    </td>
+  </tr>
+  <a href="author_add.html" th:href="@{/author/save}">
+    <input type="button" value="создать"/>
+  </a>
+  </tbody>
+</table>
+  <a href="author_list.html" th:href="@{/}">
+    <input type="submit" id="btn" value="назад"/>
+  </a>
+</body>
+</html>

@@ -48,20 +48,23 @@
           </a>
         </td>
         <td>
-          <a href="edit.html" th:href="@{/edit(bookId=${book.id})}">
+          <a href="book_edit.html" th:href="@{/book/edit(bookId=${book.id})}">
             <input type="button" value="изменить"/>
           </a>
         </td>
         <td>
-          <form th:action="@{/delete(bookId=${book.id})}" method="post" onclick="return confirm('Подтвердите удаление')">
+          <form th:action="@{/book/delete(bookId=${book.id})}" method="post" onclick="return confirm('Подтвердите удаление')">
             <input type="submit" value="удалить"/>
           </form>
         </td>
       </tr>
-      <a href="book_save.html" th:href="@{/save}">
+      <a href="book_add.html" th:href="@{/book/save}">
         <input type="button" value="создать"/>
       </a>
     </tbody>
   </table>
+  <a href="book_list.html" th:href="@{/}">
+    <input type="submit" id="btn" value="назад"/>
+  </a>
 </body>
 </html>
