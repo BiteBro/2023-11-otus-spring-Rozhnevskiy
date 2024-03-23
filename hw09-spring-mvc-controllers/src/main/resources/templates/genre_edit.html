@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>edit</title>
+
+  <style type="text/css">
+        body {
+            padding: 50px;
+        }
+        #btn {
+            margin-left: 35px
+        }
+
+    </style>
+</head>
+
+<body>
+<h2>Изменение автора</h2>
+<form action="genre_edit.html" th:action="@{/genre/edit(genreId=${genreId})}" method="post" th:object="${genreDto}">
+
+  <input type="hidden" readonly="readonly" name="id" th:value="*{id}"/>
+
+  <lable for="genre">Название</lable></br>
+  <input id="genre" type="text" name="name" th:value="*{name}"/></br></br>
+
+  <input type="submit" value="сохранить"/>
+</form>
+</br>
+<a href="genre_list.html" th:href="@{/genre}">
+  <input type="submit" id="btn" value="назад"/>
+</a>
+</body>
+
+</html>
