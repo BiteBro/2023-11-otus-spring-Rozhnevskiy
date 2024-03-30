@@ -45,8 +45,7 @@
         <td>
             <form th:action="@{/comment_delete(commentId=${comment.id})}" method="post"
                   onclick="return confirm('Подтвердите удаление')">
-                <input type="hidden" readonly="readonly" name="id" th:value="${comment.id}"/>
-                <input type="hidden" readonly="readonly" name="book.id" th:value="${bookId}"/>
+                <input type="hidden" readonly="readonly" name="bookId" th:value="${bookId}"/>
                 <input type="submit" value="удалить"/>
             </form>
         </td>

@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.dto.CommentCreateDto;
 import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.dto.CommentUpdateDto;
-import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.mapper.CommentMapper;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
@@ -28,17 +28,16 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     @Override
-    public CommentDto findById(long id) {
-        var comment = commentRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("Comment with id %d not found".formatted(id)));
-        return new CommentMapper().toDto(comment);
+    public Comment findById(Long id) {
+        return commentRepository.findById(id).orElseThrow(() ->
+                new NotFoundException("Comment with id %d not found".formatted(id)));
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<CommentDto> findByBookId(long id) {
+    public List<CommentDto> findByBookId(Long id) {
         var commentsDTO = commentRepository.findByBookId(id).orElseThrow(() ->
-                new EntityNotFoundException("Comments with id %d not found".formatted(id)));
+                new NotFoundException("Comments with id %d not found".formatted(id)));
         return commentsDTO.stream().map(commentMapper::toDto).collect(Collectors.toList());
     }
 
@@ -46,9 +45,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentCreateDto create(CommentCreateDto commentCreateDto) {
         Book book = bookRepository.findById(commentCreateDto.getBookId()).orElseThrow(() ->
-                new EntityNotFoundException("Book with id %d not found".formatted(commentCreateDto.getBookId())));
-        Comment comment = new Comment(0, commentCreateDto.getTextContent(), book);
-        return new CommentMapper().toCreateDto(commentRepository.save(comment));
+                new NotFoundException("Book with id %d not found".formatted(commentCreateDto.getBookId())));
+        Comment comment = commentMapper.toModel(commentCreateDto, book);
+        return commentMapper.toCreateDto(commentRepository.save(comment));
     }
 
     @Transactional
@@ -56,14 +55,14 @@ public class CommentServiceImpl implements CommentService {
     public CommentUpdateDto update(CommentUpdateDto commentUpdateDto) {
         Comment comment = commentRepository.findById(commentUpdateDto.getId())
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Comment with id %d not found".formatted(commentUpdateDto.getId())));
+                        new NotFoundException("Comment with id %d not found".formatted(commentUpdateDto.getId())));
         comment.setTextContent(commentUpdateDto.getTextContent());
-        return commentMapper.toUpdateDto(commentMapper.toDto(commentRepository.save(comment)));
+        return commentMapper.toUpdateDto(commentRepository.save(comment));
     }
 
     @Transactional
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         commentRepository.deleteById(id);
     }
 

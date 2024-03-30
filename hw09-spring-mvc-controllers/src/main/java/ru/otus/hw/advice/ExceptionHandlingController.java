@@ -4,19 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.otus.hw.exceptions.EntityEmptyFieldException;
-import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.exceptions.NotFoundException;
 
 @ControllerAdvice
 public class ExceptionHandlingController {
 
-    @ExceptionHandler(EntityEmptyFieldException.class)
-    public ResponseEntity<String> handleEntityEmptyFieldException(EntityEmptyFieldException exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
-    }
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException exception) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> handleNotFoundException(NotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 

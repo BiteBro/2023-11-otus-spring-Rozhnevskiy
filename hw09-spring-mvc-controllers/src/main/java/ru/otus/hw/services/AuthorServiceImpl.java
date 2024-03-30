@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.dto.AuthorDto;
-import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.mapper.AuthorMapper;
 import ru.otus.hw.repositories.AuthorRepository;
 
@@ -28,10 +28,10 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Transactional(readOnly = true)
     @Override
-    public AuthorDto findById(long id) {
+    public AuthorDto findById(Long id) {
         var author = authorRepository.findById(id)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Author with id %d not found".formatted(id)));
+                        new NotFoundException("Author with id %d not found".formatted(id)));
         return authorMapper.toDto(author);
     }
 
@@ -45,13 +45,15 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional
     @Override
     public AuthorDto update(AuthorDto authorDto) {
-        var author = authorMapper.toModel(authorDto);
-        return authorMapper.toDto(authorRepository.save(author));
+        authorRepository.findById(authorDto.getId()).orElseThrow(() ->
+                        new NotFoundException("Author with id %d not found".formatted(authorDto.getId())));
+        var updateAuthor = authorMapper.toModel(authorDto);
+        return authorMapper.toDto(authorRepository.save(updateAuthor));
     }
 
     @Transactional
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         authorRepository.deleteById(id);
     }
 }

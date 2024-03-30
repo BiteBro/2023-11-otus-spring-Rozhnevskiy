@@ -7,11 +7,11 @@ import java.util.List;
 public interface GenreService {
     List<GenreDto> findAll();
 
-    GenreDto findById(long id);
+    GenreDto findById(Long id);
 
     GenreDto create(GenreDto authorDto);
 
     GenreDto update(GenreDto authorDto);
 
-    void deleteById(long id);
+    void deleteById(Long id);
 }

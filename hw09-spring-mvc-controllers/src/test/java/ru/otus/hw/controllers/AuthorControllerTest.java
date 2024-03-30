@@ -8,15 +8,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.controller.AuthorController;
-import ru.otus.hw.controller.BookController;
 import ru.otus.hw.dto.AuthorDto;
-import ru.otus.hw.dto.BookCreateDto;
-import ru.otus.hw.exceptions.EntityNotFoundException;
-import ru.otus.hw.mapper.AuthorMapper;
-import ru.otus.hw.mapper.BookMapper;
+import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.services.AuthorService;
-import ru.otus.hw.services.BookService;
-import ru.otus.hw.services.GenreService;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,19 +27,20 @@ public class AuthorControllerTest {
     private AuthorService authorService;
 
     @Test
-    @DisplayName("Должен возвращать код 400 при создании автора с пустым названием")
+    @DisplayName("Должен оставаться на той же странице при создании автора с пустым названием")
     void shouldCreateOrUpdateBookWithEmptyTitle() throws Exception {
-        var authorDto = new AuthorDto(0, "");
+        var authorDto = new AuthorDto(0L, "");
 
         mockMvc.perform(post("/author/save")
+                        .param("id", String.valueOf(authorDto.getId()))
                         .param("fullName", String.valueOf(authorDto.getFullName())))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("Должен возвращать код 404 при при поиске автора")
     void shouldReturnNotFound() throws Exception {
-        given(authorService.findById(1L)).willThrow(new EntityNotFoundException("empty"));
+        given(authorService.findById(1L)).willThrow(new NotFoundException("empty"));
         mockMvc.perform(get("/author/edit?authorId=1"))
                 .andExpect(status().isNotFound());
     }

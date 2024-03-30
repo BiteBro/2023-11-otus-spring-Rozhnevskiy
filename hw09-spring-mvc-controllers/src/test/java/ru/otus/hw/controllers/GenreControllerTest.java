@@ -8,7 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.controller.GenreController;
 import ru.otus.hw.dto.GenreDto;
-import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.services.GenreService;
 
 import static org.mockito.BDDMockito.given;
@@ -26,19 +26,20 @@ public class GenreControllerTest {
     private GenreService genreService;
 
     @Test
-    @DisplayName("Должен возвращать код 400 при создании жанра с пустым именем")
+    @DisplayName("Должен оставаться на той же странице при создании жанра с пустым именем")
     void shouldCreateOrUpdateBookWithEmptyTitle() throws Exception {
-        var genreDto = new GenreDto(0, "");
+        var genreDto = new GenreDto(0L, "");
 
         mockMvc.perform(post("/genre/save")
+                        .param("id", String.valueOf(genreDto.getId()))
                         .param("name", String.valueOf(genreDto.getName())))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("Должен возвращать код 404 при при поиске жанра")
     void shouldReturnNotFound() throws Exception {
-        given(genreService.findById(1L)).willThrow(new EntityNotFoundException("empty"));
+        given(genreService.findById(1L)).willThrow(new NotFoundException("empty"));
         mockMvc.perform(get("/genre/edit?genreId=1"))
                 .andExpect(status().isNotFound());
     }

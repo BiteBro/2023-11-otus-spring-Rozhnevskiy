@@ -16,8 +16,9 @@
 </head>
 
 <body>
-<h2>Изменение жанра</h2>
+<h2>Добавление жанра</h2>
 <form action="genre_add.html" th:action="@{/genre/save}" method="post" th:object="${genreDto}">
+  <input type="hidden" readonly="readonly" name="id" th:value="*{id}"/>
 
   <lable for="genre">Название</lable></br>
   <input id="genre" type="text" name="name" th:value="*{name}"/></br></br>

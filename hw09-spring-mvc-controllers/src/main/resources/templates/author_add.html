@@ -16,8 +16,9 @@
 </head>
 
 <body>
-<h2>Изменение автора</h2>
+<h2>Добавление автора</h2>
 <form action="author_add.html" th:action="@{/author/save}" method="post" th:object="${authorDto}">
+    <input type="hidden" readonly="readonly" name="id" th:value="*{id}"/>
 
     <lable for="author">Название</lable></br>
     <input id="author" type="text" name="fullName" th:value="*{fullName}"/></br></br>

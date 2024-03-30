@@ -18,9 +18,8 @@
 <body>
 <h2>Добавление комментария</h2>
 <div th:object="${commentCreateDto}">
-    <form action="comment_add.html" th:action="@{/comment_add}" method="post" >
-
-        <input type="hidden" readonly="readonly" name="bookId" th:value="*{bookId}"/>
+    <form action="comment_add.html" th:action="@{/comment_add(bookId=*{bookId})}" method="post" >
+        <input type="hidden" readonly="readonly" name="id" th:value="*{id}"/>
 
         <lable for="comment">Содержимое комментария</lable></br>
         <input id="comment" type="text" name="textContent" th:value="*{textContent}"/></br></br>

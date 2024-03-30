@@ -16,8 +16,7 @@
 
 <body>
 <h2>Изменение комментария</h2>
-<div th:object="${commentUpdateDto}">
-  <form action="comment_edit.html" th:action="@{/comment_edit(commentId=*{id})}" method="post" >
+  <form action="comment_edit.html" th:action="@{/comment_edit(commentId=${commentId})}" method="post" th:object="${commentUpdateDto}">
 
     <input type="hidden" readonly="readonly" name="id" th:value="*{id}"/>
     <input type="hidden" readonly="readonly" name="bookId" th:value="*{bookId}"/>
@@ -27,10 +26,9 @@
     <input type="submit" value="сохранить"/>
   </form>
   </br>
-  <a href="comments_by_book.html" th:href="@{/comment(bookId=*{bookId})}">
+  <a href="comments_by_book.html" th:href="@{/comment(bookId=${bookId})}">
     <input type="submit" id="btn" value="назад"/>
   </a>
-</div>
 </body>
 
 </html>

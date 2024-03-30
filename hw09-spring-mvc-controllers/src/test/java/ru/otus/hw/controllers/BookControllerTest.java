@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.controller.BookController;
 import ru.otus.hw.dto.BookCreateDto;
 import ru.otus.hw.dto.BookUpdateDto;
-import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.mapper.BookMapper;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
@@ -19,6 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookController.class)
@@ -44,7 +45,7 @@ public class BookControllerTest {
     @Test
     @DisplayName("Должен изменять книгу")
     void shouldUpdateBook() throws Exception {
-        BookUpdateDto bookUpdateDto = new BookUpdateDto(1, "0_book", 1, 1);
+        BookUpdateDto bookUpdateDto = new BookUpdateDto(1L, "0_book", 1L, 1L);
 
         mockMvc.perform(post("/book/edit")
                         .param("id", String.valueOf(bookUpdateDto.getId()))
@@ -60,7 +61,7 @@ public class BookControllerTest {
     @Test
     @DisplayName("Должен создавать книгу")
     void shouldCreateBook() throws Exception {
-        BookCreateDto bookCreateDto = new BookCreateDto(0, "0_book", 1, 1);
+        BookCreateDto bookCreateDto = new BookCreateDto("0_book", 1L, 1L);
 
         mockMvc.perform(post("/book/save")
                         .param("title", bookCreateDto.getTitle())
@@ -73,21 +74,21 @@ public class BookControllerTest {
     }
 
     @Test
-    @DisplayName("Должен возвращать код 400 при создании книги с пустым названием")
+    @DisplayName("Должен оставаться на той же странице при создании книги с пустым названием")
     void shouldCreateOrUpdateBookWithEmptyTitle() throws Exception {
-        var bookCreateDto = new BookCreateDto(0, "", 1, 1);
+        var bookCreateDto = new BookCreateDto("", 1L, 1L);
 
         mockMvc.perform(post("/book/save")
                         .param("title", String.valueOf(bookCreateDto.getTitle()))
                         .param("authorId", String.valueOf(bookCreateDto.getAuthorId()))
                         .param("genreId", String.valueOf(bookCreateDto.getGenreId())))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("Должен возвращать код 404 при при поиске книги")
     void shouldReturnNotFound() throws Exception {
-        given(bookService.findById(1L)).willThrow(new EntityNotFoundException("empty"));
+        given(bookService.findById(1L)).willThrow(new NotFoundException("empty"));
         mockMvc.perform(get("/book/edit?bookId=1"))
                         .andExpect(status().isNotFound());
     }

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +32,7 @@ public class BookController {
     @GetMapping("/book/edit")
     public String editBook(@RequestParam("bookId") long bookId, Model model) {
         BookDto bookDto = bookService.findById(bookId);
+        model.addAttribute("bookId", bookId);
         model.addAttribute("bookUpdateDto", bookMapper.toUpdateDto(bookDto));
         model.addAttribute("authors", authorService.findAll());
         model.addAttribute("genres", genreService.findAll());
@@ -38,7 +40,15 @@ public class BookController {
     }
 
     @PostMapping("/book/edit")
-    public String editBook(@Valid @ModelAttribute("bookUpdateDto") BookUpdateDto bookUpdateDto) {
+    public String editBook(@Valid @ModelAttribute("bookUpdateDto") BookUpdateDto bookUpdateDto,
+                           BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("bookId", bookUpdateDto.getId());
+            model.addAttribute("bookUpdateDto", bookUpdateDto);
+            model.addAttribute("authors", authorService.findAll());
+            model.addAttribute("genres", genreService.findAll());
+            return "book_edit";
+        }
         bookService.update(bookUpdateDto);
         return "redirect:/book";
     }
@@ -52,7 +62,15 @@ public class BookController {
     }
 
     @PostMapping("/book/save")
-    public String saveBook(@Valid @ModelAttribute("bookCreateDto") BookCreateDto bookCreateDto) {
+    public String saveBook(@Valid @ModelAttribute("bookCreateDto") BookCreateDto bookCreateDto,
+                           BindingResult bindingResult, Model model) {
+        System.out.println(bookCreateDto);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("bookCreateDto", bookCreateDto);
+            model.addAttribute("authors", authorService.findAll());
+            model.addAttribute("genres", genreService.findAll());
+            return "book_add";
+        }
         bookService.create(bookCreateDto);
         return "redirect:/book";
     }

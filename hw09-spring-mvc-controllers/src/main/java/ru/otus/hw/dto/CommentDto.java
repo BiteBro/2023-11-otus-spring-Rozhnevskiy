@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class CommentDto {
 
-    private long id;
+    private Long id;
 
     private String textContent;
-
-    private BookDto book;
 
 
 }

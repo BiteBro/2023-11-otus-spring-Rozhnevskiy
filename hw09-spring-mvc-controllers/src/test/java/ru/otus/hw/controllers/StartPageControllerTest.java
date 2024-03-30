@@ -11,12 +11,11 @@ import ru.otus.hw.controller.StartPageController;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.GenreDto;
-import ru.otus.hw.mapper.BookMapper;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -41,7 +40,13 @@ public class StartPageControllerTest {
     @Test
     @DisplayName("Должен загружать список книг")
     void shouldLoadListBook() throws Exception {
-        List<BookDto> books = getBooks();
+        List<BookDto> books = Arrays.asList(
+                new BookDto(1L, "1_book",  new AuthorDto(1L, "1_author"),
+                        new GenreDto(1L, "1_genre")),
+                new BookDto(2L, "2_book", new AuthorDto(2L, "2_author"),
+                        new GenreDto(2L, "2_genre")),
+                new BookDto(3L, "3_book", new AuthorDto(3L, "3_author"),
+                        new GenreDto(3L, "3_genre")));
         when(bookService.findAll()).thenReturn(books);
         mockMvc.perform(get("/book"))
                 .andExpect(status().isOk())
@@ -52,8 +57,8 @@ public class StartPageControllerTest {
     @Test
     @DisplayName("Должен загружать список авторов")
     void shouldLoadListAuthor() throws Exception {
-        List<AuthorDto> authors = List.of(new AuthorDto(1, "1_author"),
-                new AuthorDto(2, "2_author"), new AuthorDto(3, "3_author"));
+        List<AuthorDto> authors = List.of(new AuthorDto(1L, "1_author"),
+                new AuthorDto(2L, "2_author"), new AuthorDto(3L, "3_author"));
 
         when(authorService.findAll()).thenReturn(authors);
         mockMvc.perform(get("/author"))
@@ -65,8 +70,8 @@ public class StartPageControllerTest {
     @Test
     @DisplayName("Должен загружать список жанров")
     void shouldLoadListGenre() throws Exception {
-        List<GenreDto> genres = List.of(new GenreDto(1, "1_genre"),
-                new GenreDto(2, "2_genre"), new GenreDto(3, "3_genre"));
+        List<GenreDto> genres = List.of(new GenreDto(1L, "1_genre"),
+                new GenreDto(2L, "2_genre"), new GenreDto(3L, "3_genre"));
 
         when(genreService.findAll()).thenReturn(genres);
         mockMvc.perform(get("/genre"))
@@ -75,14 +80,4 @@ public class StartPageControllerTest {
                 .andExpect(view().name("genre_list"));
     }
 
-
-    private List<BookDto> getBooks() {
-        List<BookDto> books = new ArrayList<>();
-        for (int i = 1; i < 6; i++) {
-            books.add(new BookDto(i, i + "_book",
-                    new AuthorDto(i, i + "_author"),
-                    new GenreDto(i, i + "_genre")));
-        }
-        return books;
-    }
 }
