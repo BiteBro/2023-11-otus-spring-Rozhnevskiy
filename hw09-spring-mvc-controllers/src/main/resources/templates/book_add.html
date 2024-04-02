@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>edit</title>
+
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+        #btn {
+            margin-left: 35px
+        }
+
+    </style>
+</head>
+
+<body>
+<h2>Добавление книги</h2>
+<form action="book_add.html" th:action="@{/book/save}" method="post" th:object="${bookCreateDto}">
+
+    <lable for="book">Название</lable></br>
+    <input id="book" type="text" name="title" th:value="*{title}"/></br></br>
+
+    <lable for="author">Автор</lable></br>
+    <select id="author" name="author" th:field="*{authorId}">
+        <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.fullName}"></option>
+    </select></br></br>
+
+    <lable for="genre">Жанр</lable></br>
+    <select id="genre" name="genre" th:field="*{genreId}">
+        <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}"></option>
+    </select></br></br>
+
+    <input type="submit" value="сохранить"/>
+</form>
+</br>
+<a href="book_list.html" th:href="@{/book}">
+    <input type="submit" id="btn" value="назад"/>
+</a>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .comments {
+            width: 300px;
+            border-spacing: 60px 15px;
+        }
+
+        .comments tr td, th {
+            padding: 5px;
+        }
+
+        .comments td:last-child, td:first-child {
+            width: 50px;
+        }
+
+
+    </style>
+
+</head>
+<body>
+<h2>Список комментариев к книге</h2>
+<table class="comments">
+    <thead>
+    <tr>
+        <th>Content</th>
+    </tr>
+    </thead>
+    <tbody th:each="comment : ${commentDtoList}">
+    <tr>
+        <td th:text="${comment.textContent}"></td>
+        <td>
+            <a href="comment_edit.html" th:href="@{/comment_edit(commentId=${comment.id})}">
+                <input type="button" value="изменить"/>
+            </a>
+        </td>
+        <td>
+            <form th:action="@{/comment_delete(commentId=${comment.id})}" method="post"
+                  onclick="return confirm('Подтвердите удаление')">
+                <input type="hidden" readonly="readonly" name="bookId" th:value="${bookId}"/>
+                <input type="submit" value="удалить"/>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a href="comment_add.html" th:href="@{/comment_add(bookId=${bookId})}">
+    <input type="button" value="добавить"/>
+</a>
+<br/>
+<a href="books_list.html" th:href="@{/book}">
+    <input type="button" value="назад"/>
+</a>
+</body>
+</html>
