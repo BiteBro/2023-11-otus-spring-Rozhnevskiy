@@ -35,7 +35,7 @@ class GenreRestControllerTest {
 
         given(genreService.findAll()).willReturn(listGenres);
 
-        mock.perform(get("/genre"))
+        mock.perform(get("/api/genre"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{\"id\":1,\"name\":\"Genre_1\"}," +
                         "{\"id\":2,\"name\":\"Genre_2\"},{\"id\":3,\"name\":\"Genre_3\"}]"));
@@ -47,7 +47,7 @@ class GenreRestControllerTest {
         var genre = new GenreDto(1L, "Genre_1");
         given(genreService.findById(genre.getId())).willReturn(genre);
 
-        mock.perform(get("/genre/"+genre.getId()))
+        mock.perform(get("/api/genre/"+genre.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"id\":1,\"name\":\"Genre_1\"}"));
     }

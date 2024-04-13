@@ -46,7 +46,7 @@ class CommentRestControllerTest {
 
         given(commentService.findByBookId(bookId)).willReturn(listComments);
 
-        mock.perform(get("/book/" + bookId + "/comment"))
+        mock.perform(get("/api/book/" + bookId + "/comment"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "[{\"id\":1,\"textContent\":\"Comment_1\"}," +
@@ -61,7 +61,7 @@ class CommentRestControllerTest {
 
         given(commentMapper.toDto(comment)).willReturn(commentDto);
 
-        mock.perform(get("/comment/" + commentDto.getId()))
+        mock.perform(get("/api/comment/" + commentDto.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"id\":1,\"textContent\":\"Comment_1\"}"));
     }
@@ -72,7 +72,7 @@ class CommentRestControllerTest {
         var commentCreateDto = new CommentCreateDto( "Comment_1", 1L);
         var expected = "{\"id\":1,\"textContent\":\"Comment_1\",\"bookId\":1}";
 
-        mock.perform(post("/book/1/comment")
+        mock.perform(post("/api/book/1/comment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(expected))
                 .andExpect(status().isCreated());
@@ -86,7 +86,7 @@ class CommentRestControllerTest {
         var commentUpdateDto = new CommentUpdateDto( 1L, "Comment_1", 1L);
         var expected = "{\"id\":1,\"textContent\":\"Comment_1\",\"bookId\":1}";
 
-        mock.perform(put("/book/1/comment/" + commentUpdateDto.getId())
+        mock.perform(put("/api/book/1/comment/" + commentUpdateDto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(expected))
                 .andExpect(status().isCreated());
@@ -97,7 +97,7 @@ class CommentRestControllerTest {
     @Test
     @DisplayName("Должен удалять комментарий по id")
     void shouldDeleteCommentById() throws Exception{
-        mock.perform(delete("/comment/1"))
+        mock.perform(delete("/api/comment/1"))
                 .andExpect(status().isOk());
         verify(commentService).deleteById(1L);
     }

@@ -40,7 +40,7 @@ class BookRestControllerTest {
 
         given(bookService.findAll()).willReturn(listBooks);
 
-        mock.perform(get("/book"))
+        mock.perform(get("/api/book"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "[{\"id\":1,\"title\":\"BookTitle_1\"," +
@@ -59,7 +59,7 @@ class BookRestControllerTest {
 
         given(bookService.findById(bookDto.getId())).willReturn(bookDto);
 
-        mock.perform(get("/book/" + bookDto.getId()))
+        mock.perform(get("/api/book/" + bookDto.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"id\":1,\"title\":\"BookTitle_1\"," +
                         "\"author\":{\"id\":1,\"fullName\":\"Author_1\"}," +
@@ -73,7 +73,7 @@ class BookRestControllerTest {
         var bookCreateDto = new BookCreateDto("BookTitle_1", 1L, 1L);
         var expected = "{\"id\":1,\"title\":\"BookTitle_1\",\"authorId\":1,\"genreId\":1}";
 
-        mock.perform(post("/book")
+        mock.perform(post("/api/book")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(expected))
                 .andExpect(status().isCreated());
@@ -87,7 +87,7 @@ class BookRestControllerTest {
         var bookUpdateDto = new BookUpdateDto(1L, "BookTitle_1", 1L, 1L);
         var expected = "{\"id\":1,\"title\":\"BookTitle_1\",\"authorId\":1,\"genreId\":1}";
 
-        mock.perform(put("/book/1")
+        mock.perform(put("/api/book/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(expected))
                 .andExpect(status().isCreated());
@@ -98,7 +98,7 @@ class BookRestControllerTest {
     @Test
     @DisplayName("Должен удалять книгу по id")
     void shouldDeleteCommentById() throws Exception{
-        mock.perform(delete("/book/1"))
+        mock.perform(delete("/api/book/1"))
                 .andExpect(status().isOk());
         verify(bookService).deleteById(1L);
     }

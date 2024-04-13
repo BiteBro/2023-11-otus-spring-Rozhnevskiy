@@ -12,7 +12,6 @@ import ru.otus.hw.services.AuthorService;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.atMostOnce;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,7 +35,7 @@ class AuthorRestControllerTest {
 
         given(authorService.findAll()).willReturn(listAuthors);
 
-        mock.perform(get("/author"))
+        mock.perform(get("/api/author"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{\"id\":1,\"fullName\":\"Author_1\"}," +
                         "{\"id\":2,\"fullName\":\"Author_2\"},{\"id\":3,\"fullName\":\"Author_3\"}]"));
@@ -49,7 +48,7 @@ class AuthorRestControllerTest {
 
         given(authorService.findById(author.getId())).willReturn(author);
 
-        mock.perform(get("/author/" + author.getId()))
+        mock.perform(get("/api/author/" + author.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"id\":1,\"fullName\":\"Author_1\"}"));
     }
