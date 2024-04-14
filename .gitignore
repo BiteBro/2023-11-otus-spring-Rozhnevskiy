@@ -27,3 +27,8 @@ dependency-reduced-pom.xml
 /dist/
 /nbdist/
 /.nb-gradle/
+
+node/
+node_modules/
+/output
+package-lock.json
