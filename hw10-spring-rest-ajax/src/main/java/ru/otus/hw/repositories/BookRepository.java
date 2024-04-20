@@ -9,10 +9,10 @@ import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    @EntityGraph(attributePaths = {"author", "genre"})
+    @EntityGraph(value = "author-genre-graph")
     Optional<Book> findById(Long id);
 
-    @EntityGraph(attributePaths = {"author", "genre"})
+    @EntityGraph(value = "author-genre-graph")
     List<Book> findAll();
 
 }

@@ -1,5 +1,6 @@
 package ru.otus.hw.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.hw.dto.*;
+import ru.otus.hw.dto.AuthorDto;
+import ru.otus.hw.dto.BookCreateDto;
+import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.dto.BookUpdateDto;
 import ru.otus.hw.services.BookService;
 
 import java.util.List;
@@ -28,6 +33,9 @@ class BookRestControllerTest {
     @MockBean
     private BookService bookService;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     @Test
     @DisplayName("Должен возвращать список книг")
     void shouldReturnListBooks() throws Exception {
@@ -43,17 +51,12 @@ class BookRestControllerTest {
         mock.perform(get("/api/book"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
-                        "[{\"id\":1,\"title\":\"BookTitle_1\"," +
-                                "\"author\":{\"id\":1,\"fullName\":\"Author_1\"}," +
-                                "\"genre\":{\"id\":1,\"name\":\"Genre_1\"}}," +
-                                "{\"id\":2,\"title\":\"BookTitle_2\"," +
-                                "\"author\":{\"id\":2,\"fullName\":\"Author_2\"}," +
-                                "\"genre\":{\"id\":2,\"name\":\"Genre_2\"}}]"));
+                        mapper.writeValueAsString(listBooks)));
     }
 
     @Test
     @DisplayName("Должен возвращать книгу по id")
-    void shouldReturnCommentById() throws Exception {
+    void shouldReturnBookById() throws Exception {
         var bookDto = new BookDto(1L, "BookTitle_1",
                 new AuthorDto(1L, "Author_1"), new GenreDto(1L, "Genre_1"));
 
@@ -61,17 +64,15 @@ class BookRestControllerTest {
 
         mock.perform(get("/api/book/" + bookDto.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":1,\"title\":\"BookTitle_1\"," +
-                        "\"author\":{\"id\":1,\"fullName\":\"Author_1\"}," +
-                        "\"genre\":{\"id\":1,\"name\":\"Genre_1\"}}")
+                .andExpect(content().json(mapper.writeValueAsString(bookDto))
                 );
     }
 
     @Test
     @DisplayName("Должен сохранять книгу")
-    void shouldSaveComment() throws Exception{
+    void shouldSaveBook() throws Exception{
         var bookCreateDto = new BookCreateDto("BookTitle_1", 1L, 1L);
-        var expected = "{\"id\":1,\"title\":\"BookTitle_1\",\"authorId\":1,\"genreId\":1}";
+        var expected = mapper.writeValueAsString(bookCreateDto);
 
         mock.perform(post("/api/book")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -83,9 +84,9 @@ class BookRestControllerTest {
 
     @Test
     @DisplayName("Должен изменять книгу по id")
-    void shouldEditCommentById() throws Exception{
+    void shouldEditBookById() throws Exception{
         var bookUpdateDto = new BookUpdateDto(1L, "BookTitle_1", 1L, 1L);
-        var expected = "{\"id\":1,\"title\":\"BookTitle_1\",\"authorId\":1,\"genreId\":1}";
+        var expected = mapper.writeValueAsString(bookUpdateDto);
 
         mock.perform(put("/api/book/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -97,9 +98,17 @@ class BookRestControllerTest {
 
     @Test
     @DisplayName("Должен удалять книгу по id")
-    void shouldDeleteCommentById() throws Exception{
+    void shouldDeleteBookById() throws Exception{
         mock.perform(delete("/api/book/1"))
                 .andExpect(status().isOk());
         verify(bookService).deleteById(1L);
     }
+
+    @Test
+    @DisplayName("Должен возвращать ошибку при удалении книгу по несуществующему id")
+    void shouldReturnNotFound() throws Exception {
+        mock.perform(delete("/api/books/1"))
+                .andExpect(status().isNotFound());
+    }
+
 }

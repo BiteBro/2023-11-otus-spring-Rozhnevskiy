@@ -1,5 +1,6 @@
 package ru.otus.hw.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ class CommentRestControllerTest {
     @MockBean
     private CommentMapper commentMapper;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     @Test
     @DisplayName("Должен возвращать список комментариев по id книги")
     void shouldReturnListCommentsByBookId() throws Exception {
@@ -48,9 +52,7 @@ class CommentRestControllerTest {
 
         mock.perform(get("/api/book/" + bookId + "/comment"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(
-                        "[{\"id\":1,\"textContent\":\"Comment_1\"}," +
-                                    "{\"id\":4,\"textContent\":\"Comment_4\"}]"));
+                .andExpect(content().json(mapper.writeValueAsString(listComments)));
     }
 
     @Test
@@ -63,14 +65,14 @@ class CommentRestControllerTest {
 
         mock.perform(get("/api/comment/" + commentDto.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":1,\"textContent\":\"Comment_1\"}"));
+                .andExpect(content().json(mapper.writeValueAsString(commentDto)));
     }
 
     @Test
     @DisplayName("Должен сохранять комментарий")
     void shouldSaveComment() throws Exception{
         var commentCreateDto = new CommentCreateDto( "Comment_1", 1L);
-        var expected = "{\"id\":1,\"textContent\":\"Comment_1\",\"bookId\":1}";
+        var expected = mapper.writeValueAsString(commentCreateDto);
 
         mock.perform(post("/api/book/1/comment")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -84,7 +86,7 @@ class CommentRestControllerTest {
     @DisplayName("Должен изменять комментарий по id")
     void shouldEditCommentById() throws Exception{
         var commentUpdateDto = new CommentUpdateDto( 1L, "Comment_1", 1L);
-        var expected = "{\"id\":1,\"textContent\":\"Comment_1\",\"bookId\":1}";
+        var expected =  mapper.writeValueAsString(commentUpdateDto);
 
         mock.perform(put("/api/book/1/comment/" + commentUpdateDto.getId())
                         .contentType(MediaType.APPLICATION_JSON)

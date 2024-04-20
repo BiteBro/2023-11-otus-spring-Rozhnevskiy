@@ -1,5 +1,6 @@
 package ru.otus.hw.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ class AuthorRestControllerTest {
     @MockBean
     private AuthorService authorService;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     @Test
     @DisplayName("Должен возвращать список авторов")
     void shouldReturnListAuthors() throws Exception{
@@ -37,8 +41,7 @@ class AuthorRestControllerTest {
 
         mock.perform(get("/api/author"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{\"id\":1,\"fullName\":\"Author_1\"}," +
-                        "{\"id\":2,\"fullName\":\"Author_2\"},{\"id\":3,\"fullName\":\"Author_3\"}]"));
+                .andExpect(content().json(mapper.writeValueAsString(listAuthors)));
     }
 
     @Test
@@ -50,6 +53,6 @@ class AuthorRestControllerTest {
 
         mock.perform(get("/api/author/" + author.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":1,\"fullName\":\"Author_1\"}"));
+                .andExpect(content().json(mapper.writeValueAsString(author)));
     }
 }

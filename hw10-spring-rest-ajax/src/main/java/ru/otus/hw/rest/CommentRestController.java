@@ -3,13 +3,13 @@ package ru.otus.hw.rest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import ru.otus.hw.dto.CommentCreateDto;
 import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.dto.CommentUpdateDto;
@@ -27,13 +27,11 @@ public class CommentRestController {
     private final CommentMapper commentMapper;
 
     @GetMapping("api/book/{bookId}/comment")
-    @ResponseStatus(HttpStatus.OK)
     public List<CommentDto> listComments(@PathVariable Long bookId) {
         return commentService.findByBookId(bookId);
     }
 
     @GetMapping("api/comment/{commentId}")
-    @ResponseStatus(HttpStatus.OK)
     public CommentDto commentById(@PathVariable Long commentId) {
         return commentMapper.toDto(commentService.findById(commentId));
     }
@@ -57,7 +55,6 @@ public class CommentRestController {
     }
 
     @DeleteMapping("api/comment/{commentId}")
-    @ResponseStatus(HttpStatus.OK)
     public void deleteComment(@PathVariable Long commentId) {
         commentService.deleteById(commentId);
     }
