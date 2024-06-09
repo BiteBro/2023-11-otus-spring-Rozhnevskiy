@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.otus.hw.dto.BookCreateDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.BookUpdateDto;
@@ -19,34 +20,35 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("api")
 public class BookRestController {
 
     private final BookService bookService;
 
-    @GetMapping("api/book")
+    @GetMapping("book")
     public List<BookDto> listBooks() {
         return bookService.findAll();
     }
 
-    @GetMapping("api/book/{bookId}")
+    @GetMapping("book/{bookId}")
     public BookDto getBook(@PathVariable Long bookId) {
         return bookService.findById(bookId);
     }
 
-    @PutMapping("api/book/{bookId}")
+    @PutMapping("book/{bookId}")
     @ResponseStatus(HttpStatus.CREATED)
     public BookDto editBook(@RequestBody BookUpdateDto bookUpdateDto, @PathVariable Long bookId) {
         bookUpdateDto.setId(bookId);
         return bookService.update(bookUpdateDto);
     }
 
-    @PostMapping("api/book")
+    @PostMapping("book")
     @ResponseStatus(HttpStatus.CREATED)
     public BookDto saveBook(@RequestBody BookCreateDto bookCreateDto) {
         return bookService.create(bookCreateDto);
     }
 
-    @DeleteMapping("api/book/{bookId}")
+    @DeleteMapping("book/{bookId}")
     public void delete(@PathVariable Long bookId) {
         bookService.deleteById(bookId);
     }

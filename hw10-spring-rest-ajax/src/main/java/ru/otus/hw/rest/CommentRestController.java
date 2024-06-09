@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.otus.hw.dto.CommentCreateDto;
 import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.dto.CommentUpdateDto;
@@ -20,23 +21,24 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("api")
 public class CommentRestController {
 
     private final CommentService commentService;
 
     private final CommentMapper commentMapper;
 
-    @GetMapping("api/book/{bookId}/comment")
+    @GetMapping("book/{bookId}/comment")
     public List<CommentDto> listComments(@PathVariable Long bookId) {
         return commentService.findByBookId(bookId);
     }
 
-    @GetMapping("api/comment/{commentId}")
+    @GetMapping("comment/{commentId}")
     public CommentDto commentById(@PathVariable Long commentId) {
         return commentMapper.toDto(commentService.findById(commentId));
     }
 
-    @PostMapping("api/book/{bookId}/comment")
+    @PostMapping("book/{bookId}/comment")
     @ResponseStatus(HttpStatus.CREATED)
     public CommentCreateDto saveComment(@RequestBody CommentCreateDto commentCreateDto,
                                         @PathVariable Long bookId) {
@@ -44,7 +46,7 @@ public class CommentRestController {
         return commentService.create(commentCreateDto);
     }
 
-    @PutMapping("api/book/{bookId}/comment/{commentId}")
+    @PutMapping("book/{bookId}/comment/{commentId}")
     @ResponseStatus(HttpStatus.CREATED)
     public CommentUpdateDto editComment(@RequestBody CommentUpdateDto commentUpdateDto,
                                                @PathVariable Long bookId,
@@ -54,7 +56,7 @@ public class CommentRestController {
         return commentService.update(commentUpdateDto);
     }
 
-    @DeleteMapping("api/comment/{commentId}")
+    @DeleteMapping("comment/{commentId}")
     public void deleteComment(@PathVariable Long commentId) {
         commentService.deleteById(commentId);
     }
