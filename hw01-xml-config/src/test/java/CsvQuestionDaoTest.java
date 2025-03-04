@@ -1,4 +1,6 @@
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import ru.otus.hw.config.AppProperties;
 import ru.otus.hw.config.TestFileNameProvider;
 import ru.otus.hw.dao.CsvQuestionDao;
@@ -14,7 +16,7 @@ public class CsvQuestionDaoTest {
     public CsvQuestionDaoTest() {
     }
 
-    @AfterEach
+    @BeforeEach
     void tearDown() {
         this.fileNameProvider = null;
         this.questionDao = null;
@@ -23,13 +25,14 @@ public class CsvQuestionDaoTest {
     @DisplayName("testAppProperties")
     @Test
     public void testAppProperties() {
-        this.fileNameProvider = new AppProperties("questions.csv");
+        this.fileNameProvider = new AppProperties("test_questions.csv");
         assertNotNull(fileNameProvider.getTestFileName());
     }
 
     @DisplayName("testCsvQuestionDao")
     @Test
     public void testCsvQuestionDao() {
+        this.fileNameProvider = new AppProperties("test_questions.csv");
         this.questionDao = new CsvQuestionDao(fileNameProvider);
         assertEquals(questionDao.findAll().size(), 5);
     }
