@@ -19,6 +19,7 @@
         <module>hw08-spring-mongodb</module>
         <module>hw09-spring-mvc-controllers</module>
         <module>hw10-spring-rest-ajax</module>
+        <module>hw11-spring-webflux</module>
     </modules>
 
     <properties>
