@@ -5,8 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 
-
-@Table(name = "authors")
-public record Author (@Id Long id, @NotNull String fullName){
+@Table(name = "genres")
+public record Genre (@Id Long id, @NotNull String name){
 
 }

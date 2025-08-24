@@ -2,20 +2,18 @@ spring:
   messages:
     encoding: UTF-8
 
-  datasource:
-    url: jdbc:h2:mem:testdb
+  r2dbc:
+    url: r2dbc:h2:mem:///testdb
   sql:
     init:
       mode: always
-
-  jpa:
-    open-in-view: false
-    generate-ddl: false
-    hibernate:
-      ddl-auto: none
-
-    show-sql: true
+      showSql: true
 
 logging:
   level:
-    ROOT: ERROR
+    io.r2dbc.spi: DEBUG
+    org.springframework.data.r2dbc: DEBUG
+    reactor.netty: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"
+
