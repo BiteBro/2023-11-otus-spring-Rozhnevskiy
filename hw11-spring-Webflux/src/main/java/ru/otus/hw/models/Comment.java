@@ -5,7 +5,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table(name = "comments")
-public record Comment(@Id Long id, @NotNull String textContent, @NotNull Long bookId) {
-
+public record Comment(@Id Long id, @NotNull String textContent, @NotNull Book book) {
 
 }
