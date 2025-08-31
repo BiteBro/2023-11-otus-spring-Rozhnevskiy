@@ -47,14 +47,14 @@ public class CommentRestController {
     @PostMapping("comment")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Comment> saveComment(@RequestBody CommentCreateDto commentCreateDto) {
-        return commentRepository.save(new Comment(commentCreateDto.getTextContent(), commentCreateDto.getBookId()));
+        return commentRepository.save(new Comment(commentCreateDto.textContent(), commentCreateDto.bookId()));
     }
 
     @PutMapping("comment/{commentId}")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Comment> editComment(@RequestBody CommentUpdateDto commentUpdateDto, @PathVariable Long commentId) {
         return commentRepository.save(
-                new Comment(commentId, commentUpdateDto.getTextContent(), commentUpdateDto.getBookId()));
+                new Comment(commentId, commentUpdateDto.textContent(), commentUpdateDto.bookId()));
     }
 
     @DeleteMapping("comment/{commentId}")

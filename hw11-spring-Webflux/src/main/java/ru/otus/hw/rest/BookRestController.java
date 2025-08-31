@@ -50,7 +50,7 @@ public class BookRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Book> saveBook(@RequestBody BookCreateDto bookCreateDto) {
         return bookRepository.save(
-                new Book(bookCreateDto.getTitle(), bookCreateDto.getAuthorId(), bookCreateDto.getGenreId()));
+                new Book(bookCreateDto.title(), bookCreateDto.authorId(), bookCreateDto.genreId()));
     }
 
     @DeleteMapping("book/{bookId}")

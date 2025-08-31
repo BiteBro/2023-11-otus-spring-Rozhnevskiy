@@ -3,13 +3,7 @@ package ru.otus.hw.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
 public record BookCreateDto (
 
     @NotBlank(message = "Field title should not be blank")
