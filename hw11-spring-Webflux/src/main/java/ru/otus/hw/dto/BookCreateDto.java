@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BookCreateDto {
+public record BookCreateDto (
 
     @NotBlank(message = "Field title should not be blank")
     @Size(min = 1, max = 15, message = "Field title should be between 1 and 15 characters")
-    private String title;
+    String title,
 
     @NotNull
-    private Long authorId;
+    Long authorId,
 
     @NotNull
-    private Long genreId;
+    Long genreId
 
-}
+) {}
