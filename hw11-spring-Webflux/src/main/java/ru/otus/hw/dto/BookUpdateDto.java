@@ -18,5 +18,4 @@ public record BookUpdateDto
 
         @NotNull
         Long genreId
-    ) {
-}
+    ) {}
