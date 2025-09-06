@@ -1,18 +1,58 @@
 package ru.otus.hw.rest;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import ru.otus.hw.models.Genre;
 
 @WebFluxTest(GenreRestController.class)
-class GenreRestControllerTest {
+public class GenreRestControllerTest {
+
+    @Autowired
+    private WebTestClient webClient;
+
+    @MockBean
+    GenreRestController controller;
 
     @Test
-    void listGenres() {
+    @DisplayName("Должен вернуть массив жанров и сопоставить первый элемент с заданным")
+    void shouldReturnAnArrayWithGenres() {
+
+        Flux<Genre> genres = Flux.just(new Genre(1L, "Genre_1"),
+                new Genre(2L, "Genre_2"), new Genre(3L, "Genre_3"));
+
+        Mockito.when(controller.listGenres()).thenReturn(genres);
+
+        webClient.get().uri("/api/genre")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$").isArray()
+                .jsonPath("$[0].id").isEqualTo(1L)
+                .jsonPath("$[0].name").isEqualTo("Genre_1");
     }
 
     @Test
-    void getGenreById() {
+    @DisplayName("Должен вернуть жанр по id")
+    void shouldReturnTheGenreById() {
+        Mono<Genre> genre = Mono.just(new Genre(1L, "Genre_1"));
+
+        Mockito.when(controller.getGenreById(1L)).thenReturn(genre);
+
+        webClient.get().uri("/api/genre/{id}", 1L)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Genre.class)
+                .isEqualTo(new Genre(1L, "Genre_1"));
     }
+
 }

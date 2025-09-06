@@ -30,11 +30,13 @@ public class BookRestController {
     private final BookRepositoryCustomImpl bookRepositoryCustomImpl;
 
     @GetMapping("book")
+    @ResponseStatus(HttpStatus.OK)
     public Flux<BookDto> listBooks() {
         return bookRepositoryCustomImpl.findAll();
     }
 
     @GetMapping("book/{bookId}")
+    @ResponseStatus(HttpStatus.OK)
     public Mono<BookDto> getBook(@PathVariable Long bookId) {
         return bookRepositoryCustomImpl.findById(bookId);
     }
@@ -54,6 +56,7 @@ public class BookRestController {
     }
 
     @DeleteMapping("book/{bookId}")
+    @ResponseStatus(HttpStatus.OK)
     public Mono<Void> delete(@PathVariable Long bookId) {
         return bookRepository.deleteById(bookId);
     }

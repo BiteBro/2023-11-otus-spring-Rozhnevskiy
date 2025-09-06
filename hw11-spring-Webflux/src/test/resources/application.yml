@@ -1,0 +1,19 @@
+spring:
+  messages:
+    encoding: UTF-8
+
+  r2dbc:
+    url: r2dbc:h2:mem:///testdb
+  sql:
+    init:
+      mode: always
+      showSql: true
+
+logging:
+  level:
+    io.r2dbc.spi: DEBUG
+    org.springframework.data.r2dbc: DEBUG
+    reactor.netty: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"
+

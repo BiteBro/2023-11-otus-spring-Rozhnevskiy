@@ -30,16 +30,19 @@ public class CommentRestController {
     private final CommentRepositoryCustomImpl commentRepositoryCustomImpl;
 
     @GetMapping("book/{bookId}/comment")
+    @ResponseStatus(HttpStatus.OK)
     public Flux<CommentDto> listCommentsByBookId(@PathVariable Long bookId) {
         return commentRepositoryCustomImpl.findByBookId(bookId);
     }
 
     @GetMapping("comment")
+    @ResponseStatus(HttpStatus.OK)
     public Flux<CommentDto> listComments() {
         return commentRepositoryCustomImpl.findAll();
     }
 
     @GetMapping("comment/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public Mono<CommentDto> commentById(@PathVariable("id") Long id) {
         return commentRepositoryCustomImpl.findById(id);
     }
