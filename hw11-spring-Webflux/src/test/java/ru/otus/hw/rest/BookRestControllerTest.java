@@ -10,12 +10,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ru.otus.hw.dto.BookCreateDto;
 import ru.otus.hw.dto.BookDto;
-import ru.otus.hw.dto.BookUpdateDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
+import ru.otus.hw.repositories.BookRepository;
+import ru.otus.hw.repositories.custom.BookRepositoryCustomImpl;
 
 import static org.mockito.BDDMockito.given;
 
@@ -26,7 +26,10 @@ class BookRestControllerTest {
     private WebTestClient webClient;
 
     @MockBean
-    private BookRestController controller;
+    private BookRepositoryCustomImpl repositoryCustom;
+
+    @MockBean
+    private BookRepository repository;
 
     @Test
     @DisplayName("Должен вернуть массив книг и сопоставить первый элемент с заданным")
@@ -37,7 +40,7 @@ class BookRestControllerTest {
                 new BookDto(3L,"Book_3",new Author(2L, "Author_3"), new Genre(2L, "Genre_3"))
         );
 
-        Mockito.when(controller.listBooks()).thenReturn(books);
+        Mockito.when(repositoryCustom.findAll()).thenReturn(books);
 
         webClient.get().uri("/api/book")
                 .accept(MediaType.APPLICATION_JSON)
@@ -60,7 +63,7 @@ class BookRestControllerTest {
                 new Author(1L, "Author_1"), new Genre(1L, "Genre_1"));
         Mono<BookDto> book = Mono.just(expected);
 
-        Mockito.when(controller.getBook(1L)).thenReturn(book);
+        Mockito.when(repositoryCustom.findById(1L)).thenReturn(book);
 
         webClient.get().uri("/api/book/{id}", 1L)
                 .accept(MediaType.APPLICATION_JSON)
@@ -73,9 +76,9 @@ class BookRestControllerTest {
     @Test
     @DisplayName("Должен сохранить книгу")
     void shouldSaveNewBook() {
-        BookCreateDto book = new BookCreateDto("Test_save_book", 1L, 1L);
+        Book book = new Book("Test_save_book", 1L, 1L);
 
-        Mockito.when(controller.saveBook(book)).thenReturn(Mono.just(
+        Mockito.when(repository.save(book)).thenReturn(Mono.just(
                 new Book(book.title(), book.authorId(), book.genreId())
         ));
 
@@ -88,9 +91,9 @@ class BookRestControllerTest {
     @Test
     @DisplayName("Должен изменить книгу")
     void shouldSaveUpdateBook() {
-        BookUpdateDto book = new BookUpdateDto(1L, "Test_save_book", 1L, 1L);
+        Book book = new Book(1L, "Test_save_book", 1L, 1L);
 
-        Mockito.when(controller.editBook(book, 1L)).thenReturn(Mono.just(
+        Mockito.when(repository.save(book)).thenReturn(Mono.just(
                 new Book(book.title(), book.authorId(), book.genreId())
         ));
 
@@ -103,8 +106,9 @@ class BookRestControllerTest {
     @Test
     @DisplayName("Должен удалить книгу")
     void shouldDeleteBook() {
+        Book book = new Book(1L, "Test_save_book", 1L, 1L);
 
-        given(controller.delete(1L)).willReturn(Mono.empty());
+        given(repository.delete(book)).willReturn(Mono.empty());
 
         webClient.delete().uri("/api/book/{bookId}", 1L)
                 .exchange()

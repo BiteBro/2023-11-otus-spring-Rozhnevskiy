@@ -11,6 +11,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.hw.models.Genre;
+import ru.otus.hw.repositories.GenreRepository;
 
 @WebFluxTest(GenreRestController.class)
 public class GenreRestControllerTest {
@@ -19,7 +20,7 @@ public class GenreRestControllerTest {
     private WebTestClient webClient;
 
     @MockBean
-    GenreRestController controller;
+    private GenreRepository repository;
 
     @Test
     @DisplayName("Должен вернуть массив жанров и сопоставить первый элемент с заданным")
@@ -28,7 +29,7 @@ public class GenreRestControllerTest {
         Flux<Genre> genres = Flux.just(new Genre(1L, "Genre_1"),
                 new Genre(2L, "Genre_2"), new Genre(3L, "Genre_3"));
 
-        Mockito.when(controller.listGenres()).thenReturn(genres);
+        Mockito.when(repository.findAll()).thenReturn(genres);
 
         webClient.get().uri("/api/genre")
                 .accept(MediaType.APPLICATION_JSON)
@@ -45,7 +46,7 @@ public class GenreRestControllerTest {
     void shouldReturnTheGenreById() {
         Mono<Genre> genre = Mono.just(new Genre(1L, "Genre_1"));
 
-        Mockito.when(controller.getGenreById(1L)).thenReturn(genre);
+        Mockito.when(repository.findById(1L)).thenReturn(genre);
 
         webClient.get().uri("/api/genre/{id}", 1L)
                 .accept(MediaType.APPLICATION_JSON)

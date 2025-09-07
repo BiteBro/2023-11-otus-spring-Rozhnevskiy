@@ -11,6 +11,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.hw.models.Author;
+import ru.otus.hw.repositories.AuthorRepository;
 
 @WebFluxTest(AuthorRestController.class)
 class AuthorRestControllerTest {
@@ -19,7 +20,7 @@ class AuthorRestControllerTest {
     private WebTestClient webClient;
 
     @MockBean
-    private AuthorRestController controller;
+    private AuthorRepository repository;
 
     @Test
     @DisplayName("Должен вернуть массив авторов и сопоставить первый элемент с заданным")
@@ -27,7 +28,7 @@ class AuthorRestControllerTest {
         Flux<Author> authors = Flux.just(new Author(1L, "Author_1"),
                 new Author(2L, "Author_2"), new Author(3L, "Author_3"));
 
-        Mockito.when(controller.listAuthors()).thenReturn(authors);
+        Mockito.when(repository.findAll()).thenReturn(authors);
 
         webClient.get().uri("/api/author")
                 .accept(MediaType.APPLICATION_JSON)
@@ -44,7 +45,7 @@ class AuthorRestControllerTest {
     void shouldReturnTheAuthorById() {
         Mono<Author> author = Mono.just(new Author(1L, "Author_1"));
 
-        Mockito.when(controller.findById(1L)).thenReturn(author);
+        Mockito.when(repository.findById(1L)).thenReturn(author);
 
         webClient.get().uri("/api/author/{id}", 1L)
                 .accept(MediaType.APPLICATION_JSON)

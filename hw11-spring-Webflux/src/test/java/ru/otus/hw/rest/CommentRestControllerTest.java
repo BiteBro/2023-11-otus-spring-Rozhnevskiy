@@ -1,6 +1,5 @@
 package ru.otus.hw.rest;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -11,10 +10,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ru.otus.hw.dto.CommentCreateDto;
 import ru.otus.hw.dto.CommentDto;
-import ru.otus.hw.dto.CommentUpdateDto;
 import ru.otus.hw.models.Comment;
+import ru.otus.hw.repositories.CommentRepository;
+import ru.otus.hw.repositories.custom.CommentRepositoryCustomImpl;
 
 import static org.mockito.BDDMockito.given;
 
@@ -25,7 +24,10 @@ class CommentRestControllerTest {
     private WebTestClient webClient;
 
     @MockBean
-    private CommentRestController controller;
+    private CommentRepositoryCustomImpl repositoryCustom;
+
+    @MockBean
+    private CommentRepository repository;
 
     @Test
     @DisplayName("Должен вернуть массив комментариев по id книги и сопоставить первый элемент с заданным")
@@ -34,7 +36,7 @@ class CommentRestControllerTest {
                 new CommentDto(1L,"Comment_1", 1L, "Book_1"),
                 new CommentDto(2L,"Comment_2", 1L, "Book_1"));
 
-        Mockito.when(controller.listCommentsByBookId(1L)).thenReturn(comments);
+        Mockito.when(repositoryCustom.findByBookId(1L)).thenReturn(comments);
 
         webClient.get().uri("/api/book/{bookId}/comment", 1L)
                 .accept(MediaType.APPLICATION_JSON)
@@ -56,7 +58,7 @@ class CommentRestControllerTest {
                 new CommentDto(2L,"Comment_2", 2L, "Book_2"),
                 new CommentDto(3L,"Comment_3", 3L, "Book_3"));
 
-        Mockito.when(controller.listComments()).thenReturn(comments);
+        Mockito.when(repositoryCustom.findAll()).thenReturn(comments);
 
         webClient.get().uri("/api/comment")
                 .accept(MediaType.APPLICATION_JSON)
@@ -66,8 +68,7 @@ class CommentRestControllerTest {
                 .jsonPath("$").isArray()
                 .jsonPath("$[0].id").isEqualTo(1L)
                 .jsonPath("$[0].textContent").isEqualTo("Comment_1")
-                .jsonPath("$[0].bookId").isEqualTo(1L)
-                .jsonPath("$[0].bookTitle").isEqualTo("Book_1");
+                .jsonPath("$[0].bookId").isEqualTo(1L);
     }
 
     @Test
@@ -76,24 +77,22 @@ class CommentRestControllerTest {
         Mono<CommentDto> comment = Mono.just(
                 new CommentDto(1L,"Comment_1", 1L, "Book_1"));
 
-        Mockito.when(controller.commentById(1L)).thenReturn(comment);
+        Mockito.when(repositoryCustom.findById(1L)).thenReturn(comment);
 
         webClient.get().uri("/api/comment/{id}", 1L)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(CommentDto.class)
-                .isEqualTo(new CommentDto(1L,"Comment_1", 1L, "Book_1"));
+                .expectBody(Comment.class)
+                .isEqualTo(new Comment(1L,"Comment_1", 1L));
     }
 
     @Test
     @DisplayName("Должен сохранить комментарий")
     void shouldSaveNewComment() {
-        CommentCreateDto comment = new CommentCreateDto("Test_save_comments", 1L);
+        Comment comment = new Comment("Test_save_comments", 1L);
 
-        Mockito.when(controller.saveComment(comment)).thenReturn(Mono.just(
-                new Comment(comment.textContent(), comment.bookId())
-        ));
+        Mockito.when(repository.save(comment)).thenReturn(Mono.just(comment));
 
         webClient.post().uri("/api/comment")
                 .body(Mono.just(comment), Comment.class)
@@ -105,11 +104,9 @@ class CommentRestControllerTest {
     @Test
     @DisplayName("Должен изменить комментарий")
     void shouldSaveUpdateComment() {
-        CommentUpdateDto comment = new CommentUpdateDto(1L, "Test_save_comments", 1L);
+        Comment comment = new Comment(1L, "Test_save_comments", 1L);
 
-        Mockito.when(controller.editComment(comment, 1L)).thenReturn(Mono.just(
-                new Comment(comment.id(), comment.textContent(), comment.bookId())
-        ));
+        Mockito.when(repository.save(comment)).thenReturn(Mono.just(comment));
 
         webClient.put().uri("/api/comment/{commentId}", 1L)
                 .body(Mono.just(comment), Comment.class)
@@ -121,7 +118,7 @@ class CommentRestControllerTest {
     @DisplayName("Должен удалить комментарий")
     void shouldDeleteComment() {
 
-        given(controller.deleteComment(1L)).willReturn(Mono.empty());
+        given(repository.deleteById(1L)).willReturn(Mono.empty());
 
         webClient.delete().uri("/api/comment/{commentId}", 1L)
                 .exchange()
