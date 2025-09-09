@@ -18,4 +18,5 @@ public record Book (
     public Book(String title, Long authorId, Long genreId) {
         this(null, title, authorId, genreId);
     }
+
 }

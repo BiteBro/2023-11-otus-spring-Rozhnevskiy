@@ -16,51 +16,67 @@ import reactor.core.publisher.Mono;
 import ru.otus.hw.dto.CommentCreateDto;
 import ru.otus.hw.dto.CommentDto;
 import ru.otus.hw.dto.CommentUpdateDto;
+import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.models.Comment;
+import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
-import ru.otus.hw.repositories.custom.CommentRepositoryCustomImpl;
+import ru.otus.hw.repositories.custom.CommentRepositoryCustom;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api")
 public class CommentRestController {
 
+    private final BookRepository bookRepository;
+
     private final CommentRepository commentRepository;
 
-    private final CommentRepositoryCustomImpl commentRepositoryCustomImpl;
+    private final CommentRepositoryCustom commentRepositoryCustom;
 
     @GetMapping("book/{bookId}/comment")
     @ResponseStatus(HttpStatus.OK)
     public Flux<CommentDto> listCommentsByBookId(@PathVariable Long bookId) {
-        return commentRepositoryCustomImpl.findByBookId(bookId);
+        return commentRepositoryCustom.findByBookId(bookId)
+                .switchIfEmpty(Mono.error(new NotFoundException("Comment with book id %d not found".formatted(bookId))));
     }
 
     @GetMapping("comment")
     @ResponseStatus(HttpStatus.OK)
     public Flux<CommentDto> listComments() {
-        return commentRepositoryCustomImpl.findAll();
+        return commentRepositoryCustom.findAll().switchIfEmpty(Mono.error(
+                new NotFoundException("Comments not found")));
     }
 
     @GetMapping("comment/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<CommentDto> commentById(@PathVariable("id") Long id) {
-        return commentRepositoryCustomImpl.findById(id);
+    public Mono<CommentDto> commentById(@PathVariable("id") Long commentId) {
+        return commentRepositoryCustom.findById(commentId).switchIfEmpty(Mono.error(
+                new NotFoundException("Comment with id %d not found".formatted(commentId))));
     }
 
     @PostMapping("comment")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Comment> saveComment(@RequestBody CommentCreateDto commentCreateDto) {
-        return commentRepository.save(new Comment(commentCreateDto.textContent(), commentCreateDto.bookId()));
+        return bookRepository.findById(commentCreateDto.bookId()).switchIfEmpty(Mono.error(
+                        new NotFoundException("Book with id %d not found".formatted(commentCreateDto.bookId()))))
+                .flatMap(book -> {
+                            return commentRepository.save(new Comment(commentCreateDto.textContent(), book.id()));
+                        });
     }
 
     @PutMapping("comment/{commentId}")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Comment> editComment(@RequestBody CommentUpdateDto commentUpdateDto, @PathVariable Long commentId) {
-        return commentRepository.save(
-                new Comment(commentId, commentUpdateDto.textContent(), commentUpdateDto.bookId()));
+        return bookRepository.findById(commentUpdateDto.bookId()).switchIfEmpty(Mono.error(
+                        new NotFoundException("Book with id %d not found".formatted(commentUpdateDto.bookId()))))
+                .flatMap(book -> {
+                    return commentRepository
+                            .save(new Comment(commentUpdateDto.id(), commentUpdateDto.textContent(), book.id()));
+                });
     }
 
     @DeleteMapping("comment/{commentId}")
+    @ResponseStatus(HttpStatus.OK)
     public Mono<Void> deleteComment(@PathVariable Long commentId) {
         return commentRepository.deleteById(commentId);
     }

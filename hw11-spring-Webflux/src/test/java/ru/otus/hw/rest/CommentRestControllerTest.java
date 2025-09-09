@@ -11,7 +11,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.hw.dto.CommentDto;
+import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
+import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.custom.CommentRepositoryCustomImpl;
 
@@ -25,6 +27,9 @@ class CommentRestControllerTest {
 
     @MockBean
     private CommentRepositoryCustomImpl repositoryCustom;
+
+    @MockBean
+    private BookRepository bookRepository;
 
     @MockBean
     private CommentRepository repository;
@@ -91,7 +96,9 @@ class CommentRestControllerTest {
     @DisplayName("Должен сохранить комментарий")
     void shouldSaveNewComment() {
         Comment comment = new Comment("Test_save_comments", 1L);
+        Book book = new Book(1L, "Test_save_book", 1L, 1L);
 
+        Mockito.when(bookRepository.findById(1L)).thenReturn(Mono.just(book));
         Mockito.when(repository.save(comment)).thenReturn(Mono.just(comment));
 
         webClient.post().uri("/api/comment")
@@ -105,7 +112,9 @@ class CommentRestControllerTest {
     @DisplayName("Должен изменить комментарий")
     void shouldSaveUpdateComment() {
         Comment comment = new Comment(1L, "Test_save_comments", 1L);
+        Book book = new Book(1L, "Test_save_book", 1L, 1L);
 
+        Mockito.when(bookRepository.findById(1L)).thenReturn(Mono.just(book));
         Mockito.when(repository.save(comment)).thenReturn(Mono.just(comment));
 
         webClient.put().uri("/api/comment/{commentId}", 1L)

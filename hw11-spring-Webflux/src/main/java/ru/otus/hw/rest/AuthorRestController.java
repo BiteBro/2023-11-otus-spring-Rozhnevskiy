@@ -30,7 +30,7 @@ public class AuthorRestController {
     @ResponseStatus(HttpStatus.OK)
     public Mono<Author> findById(@PathVariable("authorId") Long id) {
         return authorRepository.findById(id)
-                .switchIfEmpty(Mono.error(NotFoundException::new));
+                .switchIfEmpty(Mono.error(new NotFoundException("Author with id %d not found".formatted(id))));
     }
 
 }

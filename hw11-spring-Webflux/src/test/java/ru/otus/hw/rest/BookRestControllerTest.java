@@ -14,13 +14,21 @@ import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
+import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
+import ru.otus.hw.repositories.GenreRepository;
 import ru.otus.hw.repositories.custom.BookRepositoryCustomImpl;
 
 import static org.mockito.BDDMockito.given;
 
 @WebFluxTest(BookRestController.class)
 class BookRestControllerTest {
+
+    @MockBean
+    private AuthorRepository authorRepository;
+
+    @MockBean
+    private GenreRepository genreRepository;
 
     @Autowired
     private WebTestClient webClient;
@@ -77,10 +85,12 @@ class BookRestControllerTest {
     @DisplayName("Должен сохранить книгу")
     void shouldSaveNewBook() {
         Book book = new Book("Test_save_book", 1L, 1L);
+        Author author = new Author(1L,"Test_save_book");
+        Genre genre = new Genre(1L,"Test_save_book");
 
-        Mockito.when(repository.save(book)).thenReturn(Mono.just(
-                new Book(book.title(), book.authorId(), book.genreId())
-        ));
+        Mockito.when(authorRepository.findById(1L)).thenReturn(Mono.just(author));
+        Mockito.when(genreRepository.findById(1L)).thenReturn(Mono.just(genre));
+        Mockito.when(repository.save(book)).thenReturn(Mono.just(book));
 
         webClient.post().uri("/api/book")
                 .body(Mono.just(book), Book.class)
@@ -92,10 +102,13 @@ class BookRestControllerTest {
     @DisplayName("Должен изменить книгу")
     void shouldSaveUpdateBook() {
         Book book = new Book(1L, "Test_save_book", 1L, 1L);
+        Author author = new Author(1L,"Test_save_book");
+        Genre genre = new Genre(1L,"Test_save_book");
 
-        Mockito.when(repository.save(book)).thenReturn(Mono.just(
-                new Book(book.title(), book.authorId(), book.genreId())
-        ));
+        Mockito.when(authorRepository.findById(1L)).thenReturn(Mono.just(author));
+        Mockito.when(genreRepository.findById(1L)).thenReturn(Mono.just(genre));
+        Mockito.when(repository.findById(1L)).thenReturn(Mono.just(book));
+        Mockito.when(repository.save(book)).thenReturn(Mono.just(book));
 
         webClient.put().uri("/api/book/{bookId}", 1L)
                 .body(Mono.just(book), Book.class)
@@ -114,4 +127,20 @@ class BookRestControllerTest {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+   /* @Test
+    @DisplayName("Должен вернуть код ошибки 404")
+    void shouldReturnStatusCode404() {
+        Book book = new Book(1L, "Test_save_book", 1L, 1L);
+
+
+
+        webClient..uri("/api/book/{bookId}", 2L)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+*/
+
+
+
 }
