@@ -42,7 +42,7 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
     public Mono<BookDto> findById(Long id) {
         return template.getDatabaseClient().inConnectionMany(connection ->
                 Flux.from(connection.createStatement(SQL_BY_ID).bind("$1", id).execute())
-                        .switchIfEmpty(Flux.error(NotFoundException::new))
+                        .switchIfEmpty(Flux.error(new NotFoundException("Book with id %d not found".formatted(id))))
                         .flatMap(result -> result.map(this::mapper))).single();
     }
 
