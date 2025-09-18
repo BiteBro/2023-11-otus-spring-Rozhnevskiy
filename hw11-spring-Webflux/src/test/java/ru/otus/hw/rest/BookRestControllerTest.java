@@ -1,13 +1,13 @@
 package ru.otus.hw.rest;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -133,9 +133,9 @@ class BookRestControllerTest {
     @Test
     @DisplayName("Должен вернуть код ошибки 404")
     void shouldReturnStatusCode404() {
-        webClient.get().uri("/api/non-existent-resource")
+        webClient.get().uri("/api/not_found")
                 .exchange()
-                .expectStatus().isEqualTo(404);
+                .expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -143,7 +143,7 @@ class BookRestControllerTest {
     void shouldReturnStatusCode500() {
         webClient.get().uri("/api/book/{id}", 2L)
                 .exchange()
-                .expectStatus().isEqualTo(500);
+                .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Test
@@ -154,7 +154,7 @@ class BookRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("\"tittle\": \"BookTitle_11\", \"authorId\": 2, \"genreId\": 2")
                 .exchange()
-                .expectStatus().isEqualTo(500);
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
 }
