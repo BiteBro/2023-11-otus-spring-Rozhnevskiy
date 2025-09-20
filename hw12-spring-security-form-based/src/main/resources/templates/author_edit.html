@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>edit</title>
+
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+        #btn {
+            margin-left: 35px
+        }
+
+    </style>
+</head>
+
+<body>
+<h2>Изменение автора</h2>
+<form action="author_edit.html" th:action="@{/author/edit(authorId=${authorId})}" method="post" th:object="${authorDto}">
+
+    <input type="hidden" readonly="readonly" name="id" th:value="*{id}"/>
+
+    <lable for="author">Название</lable></br>
+    <input id="author" type="text" name="fullName" th:value="*{fullName}"/></br></br>
+
+    <input type="submit" value="сохранить"/>
+</form>
+</br>
+<a href="author_list.html" th:href="@{/author}">
+    <input type="submit" id="btn" value="назад"/>
+</a>
+</body>
+
+</html>
