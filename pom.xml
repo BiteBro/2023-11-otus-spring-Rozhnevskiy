@@ -20,6 +20,7 @@
         <module>hw09-spring-mvc-controllers</module>
         <module>hw10-spring-rest-ajax</module>
         <module>hw11-spring-Webflux</module>
+        <module>hw12-spring-security-form-based</module>
     </modules>
 
     <properties>
