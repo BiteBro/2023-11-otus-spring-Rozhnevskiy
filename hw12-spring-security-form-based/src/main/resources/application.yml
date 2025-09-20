@@ -15,7 +15,3 @@ spring:
       ddl-auto: none
 
     show-sql: true
-
-logging:
-  level:
-    ROOT: ERROR

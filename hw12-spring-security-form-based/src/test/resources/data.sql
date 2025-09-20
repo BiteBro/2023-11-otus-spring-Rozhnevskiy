@@ -15,3 +15,8 @@ values (1, 'Comment_1', 1), (2, 'Comment_2', 2), (3, 'Comment_3', 3),
         (4, 'Comment_4', 1), (5, 'Comment_5', 2), (6, 'Comment_6', 3);
 alter table comments alter column id restart with 7;
 
+merge into users(id, username, password )
+values (1, 'user1', 'password1'), (2, 'user2', 'password2');
+alter table users alter column id restart with 3;
+
+

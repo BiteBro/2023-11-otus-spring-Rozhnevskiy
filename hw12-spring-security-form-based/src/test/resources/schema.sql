@@ -24,3 +24,10 @@ create table if not exists comments (
     book_id bigint references books(id) on delete cascade,
     primary key (id)
 );
+
+create table if not exists users (
+    id bigserial,
+    username varchar(255),
+    password varchar(255),
+    primary key (id)
+);
