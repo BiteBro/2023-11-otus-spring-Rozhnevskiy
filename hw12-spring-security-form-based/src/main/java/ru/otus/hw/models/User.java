@@ -16,13 +16,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "genres")
-public class Genre {
+@Table(name = "users")
+public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+
+    @Column(name = "password", nullable = false)
+    private String password;
 
 }
