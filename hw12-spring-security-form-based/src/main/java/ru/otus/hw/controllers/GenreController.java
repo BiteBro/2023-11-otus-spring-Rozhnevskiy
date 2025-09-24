@@ -1,4 +1,4 @@
-package ru.otus.hw.controller;
+package ru.otus.hw.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +48,6 @@ public class GenreController {
     public String saveGenre(@Valid @ModelAttribute("genreDto") GenreDto genreDto,
                             BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            System.out.println(genreDto);
             model.addAttribute("genreDto", genreDto);
             return "genre_add";
         }

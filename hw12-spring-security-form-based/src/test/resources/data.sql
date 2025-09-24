@@ -16,7 +16,8 @@ values (1, 'Comment_1', 1), (2, 'Comment_2', 2), (3, 'Comment_3', 3),
 alter table comments alter column id restart with 7;
 
 merge into users(id, username, password )
-values (1, 'user1', 'password1'), (2, 'user2', 'password2');
+values (1, 'user1', '$2y$10$hAMZRZ9yYzEtLz5KV0fc3efSW1m7lhQk0d5P4kKXYzVPM/crX4hbe'),
+        (2, 'user2', '$2y$10$S6JDeihgEJCEG3Vpl231dOJdgUGIUkYfEW9JqBCrhM87NT7y9wUxO');
 alter table users alter column id restart with 3;
 
 

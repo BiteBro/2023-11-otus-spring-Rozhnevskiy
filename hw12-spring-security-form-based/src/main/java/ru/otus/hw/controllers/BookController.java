@@ -1,4 +1,4 @@
-package ru.otus.hw.controller;
+package ru.otus.hw.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +64,6 @@ public class BookController {
     @PostMapping("/book/save")
     public String saveBook(@Valid @ModelAttribute("bookCreateDto") BookCreateDto bookCreateDto,
                            BindingResult bindingResult, Model model) {
-        System.out.println(bookCreateDto);
         if (bindingResult.hasErrors()) {
             model.addAttribute("bookCreateDto", bookCreateDto);
             model.addAttribute("authors", authorService.findAll());

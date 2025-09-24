@@ -1,13 +1,15 @@
-package controllers;
+package ru.otus.hw.controllers;
 
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.hw.controller.StartPageController;
+import ru.otus.hw.Application;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.GenreDto;
@@ -15,16 +17,19 @@ import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-@WebMvcTest(StartPageController.class)
+@SpringBootTest(classes = Application.class)
+@AutoConfigureMockMvc
+@WithMockUser
 public class StartPageControllerTest {
 
     @Autowired
@@ -42,7 +47,7 @@ public class StartPageControllerTest {
     @Test
     @DisplayName("Должен загружать список книг")
     void shouldLoadListBook() throws Exception {
-        List<BookDto> books = Arrays.asList(
+        List<BookDto> books = List.of(
                 new BookDto(1L, "1_book",  new AuthorDto(1L, "1_author"),
                         new GenreDto(1L, "1_genre")),
                 new BookDto(2L, "2_book", new AuthorDto(2L, "2_author"),
@@ -81,5 +86,7 @@ public class StartPageControllerTest {
                 .andExpect(model().attribute("genreDtoList", genres))
                 .andExpect(view().name("genre_list"));
     }
+
+
 
 }
