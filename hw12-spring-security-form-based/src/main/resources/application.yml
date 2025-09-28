@@ -16,9 +16,9 @@ spring:
 
     show-sql: true
 
-logging:
-  level:
-    root: DEBUG
-    org.springframework.web: DEBUG
-    org.thymeleaf: DEBUG
-    com.otus.hw.Application: DEBUG
+  logging:
+    level:
+      root: WARN
+      org.springframework.web: WARN
+      org.thymeleaf: WARN
+      com.otus.hw.Application: WARN

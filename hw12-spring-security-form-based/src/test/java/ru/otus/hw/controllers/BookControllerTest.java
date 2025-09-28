@@ -18,7 +18,6 @@ import ru.otus.hw.mapper.BookMapper;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
-import ru.otus.hw.services.UserService;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -27,13 +26,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import(SecurityConfiguration.class)
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(username = "user1")
 public class BookControllerTest {
 
-    @MockBean
-    private UserService service;
+/*    @MockBean
+    private MyUserDetailsService service;*/
 
     @Autowired
     private MockMvc mockMvc;
@@ -113,7 +113,5 @@ public class BookControllerTest {
 
         verify(bookService).deleteById(id);
     }
-
-
 
 }

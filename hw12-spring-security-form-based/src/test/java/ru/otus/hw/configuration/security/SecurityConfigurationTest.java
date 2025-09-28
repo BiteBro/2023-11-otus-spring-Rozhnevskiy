@@ -1,10 +1,11 @@
-package ru.otus.hw.security;
+package ru.otus.hw.configuration.security;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.Application;
@@ -14,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import(SecurityConfiguration.class)
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 public class SecurityConfigurationTest {
@@ -34,7 +36,7 @@ public class SecurityConfigurationTest {
 
     @Test
     @DisplayName("Проверка доступа для аутентифицированного пользователя")
-    @WithMockUser
+    @WithMockUser(username = "ser1", password = "password1")
     void shouldAccessForAuthenticatedUser() throws Exception {
 
         mockMvc.perform(get("/book"))

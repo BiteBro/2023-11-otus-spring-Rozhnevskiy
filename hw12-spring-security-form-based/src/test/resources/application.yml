@@ -18,7 +18,7 @@ spring:
 
 logging:
   level:
-    root: DEBUG
-    org.springframework.web: DEBUG
-    org.thymeleaf: DEBUG
-    com.otus.hw.Application: DEBUG
+    root: WARN
+    org.springframework.web: WARN
+    org.thymeleaf: WARN
+    com.otus.hw.Application: WARN
