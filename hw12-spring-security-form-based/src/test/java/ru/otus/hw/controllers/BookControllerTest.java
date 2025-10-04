@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.Application;
-import ru.otus.hw.configuration.security.SecurityConfiguration;
 import ru.otus.hw.dto.BookCreateDto;
 import ru.otus.hw.dto.BookUpdateDto;
 import ru.otus.hw.exceptions.NotFoundException;
@@ -26,14 +25,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(SecurityConfiguration.class)
+@Import(BookController.class)
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @WithMockUser(username = "user1")
 public class BookControllerTest {
-
-/*    @MockBean
-    private MyUserDetailsService service;*/
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,8 +45,6 @@ public class BookControllerTest {
 
     @MockBean
     private BookMapper bookMapper;
-
-
 
     @Test
     @DisplayName("Должен изменять книгу")

@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.Application;
-import ru.otus.hw.configuration.security.SecurityConfiguration;
 import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.services.GenreService;
@@ -20,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(SecurityConfiguration.class)
+@Import(GenreController.class)
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @WithMockUser

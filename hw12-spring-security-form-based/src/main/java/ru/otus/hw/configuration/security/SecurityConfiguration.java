@@ -36,9 +36,14 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/login").permitAll();
-                    authorize.anyRequest().authenticated();
-                }).authenticationProvider(authenticationProvider())
+                    authorize
+                            .requestMatchers("/login")
+                            .permitAll();
+                    authorize
+                            .anyRequest()
+                            .authenticated();
+                })
+                .authenticationProvider(authenticationProvider())
                 .formLogin(Customizer.withDefaults());
 
         return http.build();

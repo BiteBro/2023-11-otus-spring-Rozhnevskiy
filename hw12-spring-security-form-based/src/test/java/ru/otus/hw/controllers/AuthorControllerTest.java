@@ -1,6 +1,5 @@
 package ru.otus.hw.controllers;
 
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.Application;
-import ru.otus.hw.configuration.security.SecurityConfiguration;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.exceptions.NotFoundException;
 import ru.otus.hw.services.AuthorService;
@@ -21,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(SecurityConfiguration.class)
+@Import(AuthorController.class)
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @WithMockUser
@@ -51,6 +49,5 @@ public class AuthorControllerTest {
         mockMvc.perform(get("/author/edit?authorId=1"))
                 .andExpect(status().isNotFound());
     }
-
 
 }

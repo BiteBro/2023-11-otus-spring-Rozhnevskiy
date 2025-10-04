@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ru.otus.hw.models.User;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
@@ -14,7 +15,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
