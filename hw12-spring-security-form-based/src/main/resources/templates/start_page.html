@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Start page</title>
+</head>
+<body>
+<h2>Выберете раздел</h2><br/>
+<a href="book_list.html" th:href="@{/book}">
+    <input type="button" value="книги"/>
+</a><br/><br/>
+<a href="author_list.html" th:href="@{/author}">
+    <input type="button" value="авторы"/>
+</a><br/><br/>
+<a href="genre_list.html" th:href="@{/genre}">
+    <input type="button" value="жанры"/>
+</a><br/><br/>
+</body>
+</html>
